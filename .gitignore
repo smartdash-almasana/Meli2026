@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vite/
+*.local
+*.tsbuildinfo
+.ui-check/
+.vercel/
+landing/Gemini_Generated_Image_*.png

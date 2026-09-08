@@ -1,0 +1,37 @@
+{
+  "name": "meli2026",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "verify:local-store": "tsx scripts/verify-local-store.ts",
+    "verify:ml-core": "tsx scripts/verify-ml-core-oauth.ts",
+    "verify:ml-items": "tsx scripts/verify-ml-items.ts",
+    "verify:survey": "tsx scripts/verify-survey.ts",
+    "verify:survey-spec": "tsx scripts/verify-survey-spec.ts",
+    "verify:survey-e2e": "tsx scripts/verify-survey-e2e.ts",
+    "verify:sync": "tsx scripts/verify-sync-engine.ts",
+    "verify:remote": "tsx scripts/verify-remote.ts",
+    "verify:auth": "tsx scripts/verify-auth.ts",
+    "provision:operators": "tsx scripts/provision-operators.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
+    "dexie": "^4.4.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.5.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.2",
+    "fake-indexeddb": "^6.2.5",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3"
+  }
+}

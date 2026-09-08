@@ -1,0 +1,10 @@
+{
+  "name": "Meli2026",
+  "short_name": "Meli2026",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#171716",
+  "theme_color": "#171716",
+  "description": "Aplicación de entrevistas Meli2026"
+}
