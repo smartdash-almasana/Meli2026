@@ -1,129 +1,356 @@
-import { useEffect, useState } from 'react';
-import QRCode from 'qrcode';
-import { audienceDoors, developerCapabilities, excelSignals, operationalNodes, sellerPainPoints, SURVEY_URL } from './data/content';
-
-interface HeaderProps { readonly surveyUrl: string }
-interface HeroProps { readonly surveyUrl: string }
-interface StoryBandProps { readonly id: string; readonly index: string; readonly eyebrow: string; readonly title: string; readonly copy: string; readonly items: readonly string[]; readonly cta: string; readonly href: string; readonly tone?: 'light' | 'paper' | 'ink' }
-interface ResponsibilityProps { readonly id: string }
-interface FinalCtaProps { readonly surveyUrl: string }
-
-function useSurveyQr(surveyUrl: string, width = 560) {
-  const [qr, setQr] = useState('');
+import { useEffect, useState } from "react";
+import QRCode from "qrcode";
+import {
+  modules,
+  sellerPainPoints,
+  excelSignals,
+  systems,
+  questions,
+  SURVEY_URL,
+  WHATSAPP_URL,
+} from "./data/content";
+function Contact({ label = "Hablemos por WhatsApp" }: { label?: string }) {
+  return (
+    <a className="button" href={WHATSAPP_URL}>
+      {label} <span aria-hidden="true">↗</span>
+    </a>
+  );
+}
+function CommercialQr() {
+  const [qr, setQr] = useState("");
   useEffect(() => {
     let active = true;
-    void QRCode.toDataURL(surveyUrl, {
-      width,
+    void QRCode.toDataURL(WHATSAPP_URL, {
+      width: 640,
       margin: 4,
-      errorCorrectionLevel: 'H',
-      color: { dark: '#17202a', light: '#fffaf6' },
-    }).then((value) => { if (active) setQr(value); });
-    return () => { active = false; };
-  }, [surveyUrl, width]);
-  return qr;
-}
-
-function BrandMark() {
-  return <span className="brand-lockup">
-    <img src="/logopymia2.jpg" width="64" height="64" alt="" fetchPriority="high" />
-    <span><strong>PymIA</strong><small>Operaciones conectadas</small></span>
-  </span>;
-}
-
-function Header({ surveyUrl }: HeaderProps) {
-  return <header className="site-header shell">
-    <a className="brand" href="#top" aria-label="PymIA, volver al inicio">
-      <BrandMark />
+      errorCorrectionLevel: "M",
+      color: { dark: "#172e2b", light: "#ffffff" },
+    })
+      .then((value) => {
+        if (active) setQr(value);
+      })
+      .catch(() => {
+        if (active) setQr("");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  return (
+    <a
+      className="qr-link"
+      href={WHATSAPP_URL}
+      aria-label="Abrir WhatsApp para contarnos tu problema"
+    >
+      {qr && (
+        <img
+          src={qr}
+          width="240"
+          height="240"
+          alt="Código QR para hablar con PymIA por WhatsApp"
+        />
+      )}
+      <span>Escaneá o tocá para hablar por WhatsApp ↗</span>
     </a>
-    <div className="header-meta"><span>Experiencia Mercado Libre 2026</span><a href={surveyUrl}>Abrir encuesta ↗</a></div>
-  </header>;
+  );
 }
-
-function OperationalRail() {
-  return <div className="operational-rail" aria-label="Cómo se conecta PymIA con tu operación">
-    {operationalNodes.map(([name, note], index) => <div className="rail-node" key={name}>
-      <span className="rail-dot" aria-hidden="true" />
-      <div><strong>{name}</strong><small>{note}</small></div>
-      {index < operationalNodes.length - 1 && <span className="rail-line" aria-hidden="true" />}
-    </div>)}
-  </div>;
-}
-
-function Hero({ surveyUrl }: HeroProps) {
-  const qr = useSurveyQr(surveyUrl, 220);
-  return <section className="hero shell" id="top">
-    <div className="hero-copy">
-      <p className="eyebrow">PymIA / Experiencia Mercado Libre 2026</p>
-      <h1>No te pedimos que cambies todo tu sistema.</h1>
-      <p className="hero-lede">Encontramos el cuello de botella, nos conectamos con lo que ya tenés y construimos la pieza que hoy te falta.</p>
-      <div className="hero-actions"><a className="button button-primary" href={surveyUrl}>Contanos qué problema te está frenando <span aria-hidden="true">↗</span></a><a className="text-link" href="#how">Conocé cómo trabajamos <span aria-hidden="true">↓</span></a></div>
-    </div>
-    <div className="hero-system"><p className="system-label">Una operación real no vive en un solo lugar</p><OperationalRail />
-      <a className="hero-qr" href={surveyUrl} aria-label="Abrir la encuesta de diagnóstico">
-        {qr && <img src={qr} width="112" height="112" alt="" />}
-        <span><strong>¿Estás en el evento?</strong><small>Escaneá o tocá para contarnos tu problema.</small></span>
+function App() {
+  return (
+    <div className="page" id="top">
+      <a className="skip-link" href="#main-content">
+        Saltar al contenido
+      </a>
+      <header className="site-header shell">
+        <a className="brand" href="#top" aria-label="PymIA, volver al inicio">
+          <img
+            src="/logopymia2.jpg"
+            width="56"
+            height="56"
+            alt="Logo de PymIA"
+            fetchPriority="high"
+          />
+          <span>
+            <strong>PymIA</strong>
+            <small>Operaciones conectadas</small>
+          </span>
+        </a>
+        <nav aria-label="Navegación principal">
+          <a href="#modulos">Módulos</a>
+          <a href={WHATSAPP_URL}>Hablemos ↗</a>
+        </nav>
+      </header>
+      <main id="main-content">
+        <section className="hero shell">
+          <p className="eyebrow">
+            Experiencia Mercado Libre 2026 / Buenos Aires
+          </p>
+          <h1>
+            Automatizamos tu operación en Mercado Libre.
+            <br />
+            <em>Sin tirar a la basura lo que ya usás.</em>
+          </h1>
+          <div className="hero-bottom">
+            <div>
+              <p className="hero-lede">
+                Conectamos Mercado Libre, tu sistema de gestión, Excel y
+                WhatsApp. Encontramos el cuello de botella y construimos la
+                pieza que te falta.
+              </p>
+              <p className="thesis">
+                Primero integramos. Migrar es la última opción.
+              </p>
+            </div>
+            <div>
+              <div className="actions">
+                <Contact />
+                <a className="text-link" href="#modulos">
+                  Ver módulos ↓
+                </a>
+              </div>
+              <p className="microcopy">
+                Contanos qué te está trabando. Vemos si conviene conectar lo que
+                ya tenés o construir una pieza puntual.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section className="modules shell section" id="modulos">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">La pieza que te falta</p>
+              <h2>Módulos</h2>
+            </div>
+            <p>
+              Conectamos lo que ya usás y construimos sólo la parte que te
+              falta.
+            </p>
+          </div>
+          <p className="offer-note">
+            Posibilidades de desarrollo e integración. Definimos el alcance
+            según tu operación.
+          </p>
+          <div className="module-list">
+            {modules.map(([title, copy, detail], index) => (
+              <article className="module" key={title}>
+                <span className="module-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3>{title}</h3>
+                <div>
+                  <p>{copy}</p>
+                  <p className="module-detail">{detail}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <a className="text-link module-cta" href={WHATSAPP_URL}>
+            ¿No ves tu problema acá? Hablemos. ↗
+          </a>
+        </section>
+        <section className="tint" id="sellers">
+          <div className="shell section split">
+            <div>
+              <p className="eyebrow">¿Te suena?</p>
+              <h2>
+                Vendés en Mercado Libre. El problema muchas veces está entre los
+                sistemas.
+              </h2>
+              <p>
+                Mercado Libre puede funcionar bien y, aun así, tu operación
+                seguir dependiendo de Excel, carga manual, tu sistema de gestión
+                y controles hechos a mano.
+              </p>
+            </div>
+            <ul className="pain-list">
+              {sellerPainPoints.map((pain) => (
+                <li key={pain}>“{pain}”</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+        <section className="shell section" id="how">
+          <p className="eyebrow">De un problema a una solución puntual</p>
+          <h2>Cómo trabajamos</h2>
+          <div className="steps">
+            {[
+              [
+                "Encontramos el problema",
+                "Vemos dónde se corta realmente tu operación.",
+              ],
+              [
+                "Conectamos lo que ya tenés",
+                "Mercado Libre, Excel, tu sistema de gestión, WhatsApp u otras herramientas.",
+              ],
+              [
+                "Construimos la pieza que falta",
+                "Una integración, automatización, control o módulo puntual.",
+              ],
+            ].map(([title, copy], i) => (
+              <article key={title}>
+                <span className="step-number">0{i + 1}</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+          <p className="thesis">
+            Primero integramos. Migrar es la última opción.
+          </p>
+        </section>
+        <section className="shell section split" id="whatsapp">
+          <div>
+            <p className="eyebrow">WhatsApp para tu negocio</p>
+            <h2>Tu negocio también puede hablarte por WhatsApp.</h2>
+            <p>
+              No para responder mensajes genéricos. Para consultar datos reales
+              de tu operación y recibir sólo lo que merece atención.
+            </p>
+            <Contact />
+          </div>
+          <div className="conversation">
+            <p className="example-label">Ejemplo de lo que podemos construir</p>
+            <div className="message from-owner">
+              <span>VOS</span>
+              <p>¿Hay algo que tenga que mirar hoy?</p>
+            </div>
+            <div className="message">
+              <span>PYMIA</span>
+              <p>
+                Hay diferencias de stock que conviene revisar y algunas
+                publicaciones donde deberías mirar margen y costos.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section className="tint" id="excel">
+          <div className="shell section split">
+            <div>
+              <p className="eyebrow">Excel bajo control</p>
+              <h2>¿Tu Excel dice que ganaste pero la plata no cierra?</h2>
+              <p>
+                PymIA puede revisar la lógica de tu planilla, encontrar
+                inconsistencias y mostrarte dónde puede estar el problema.
+              </p>
+            </div>
+            <ul className="signal-list">
+              {excelSignals.map((signal) => (
+                <li key={signal}>{signal}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+        <section className="shell section" id="responsibility">
+          <p className="eyebrow">Tecnología con criterio</p>
+          <h2>IA donde ayuda. Reglas claras donde no se puede improvisar.</h2>
+          <div className="responsibilities">
+            <article>
+              <h3>El programa</h3>
+              <p>
+                Los cálculos, controles y reglas que tienen que ser exactos no
+                dependen de que una IA adivine.
+              </p>
+            </article>
+            <article>
+              <h3>La IA</h3>
+              <p>
+                La IA sirve para entender, conversar y explicar la información
+                de una forma más natural.
+              </p>
+            </article>
+          </div>
+          <p className="thesis">
+            La IA ayuda a entender. El programa controla lo que tiene que ser
+            exacto.
+          </p>
+        </section>
+        <section className="tint" id="integration">
+          <div className="shell section">
+            <p className="eyebrow">
+              No te pedimos que cambies todo lo que ya usás
+            </p>
+            <h2>
+              Primero integramos.
+              <br />
+              Migrar es la última opción.
+            </h2>
+            <p>
+              No necesitás empezar de cero para resolver un problema puntual.
+            </p>
+            <ul className="systems">
+              {systems.map((system) => (
+                <li key={system}>{system}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+        <section className="shell section developer-section" id="developers">
+          <div>
+            <p className="eyebrow">También trabajamos con vos</p>
+            <h2>¿Desarrollás o integrás sistemas?</h2>
+          </div>
+          <div>
+            <p>
+              Si un cliente te pide una capacidad que no querés construir desde
+              cero, podemos desarrollar la pieza especializada y dejarla lista
+              para integrar.
+            </p>
+            <p className="module-detail">
+              Integraciones, módulos reutilizables, automatizaciones, API,
+              servicios especializados, WhatsApp conectado con datos o
+              soluciones con tu marca.
+            </p>
+            <a className="text-link" href={WHATSAPP_URL}>
+              Hablemos de esa pieza ↗
+            </a>
+          </div>
+        </section>
+        <section className="shell section split" id="faq">
+          <div>
+            <p className="eyebrow">Preguntas frecuentes</p>
+            <h2>Antes de empezar.</h2>
+            <p>
+              Si no vemos una forma razonable de resolver el problema, te lo
+              decimos.
+            </p>
+            <p className="thesis">No te obligamos a cambiar todo.</p>
+          </div>
+          <div className="faq-list">
+            {questions.map(([question, answer]) => (
+              <details key={question}>
+                <summary>{question}</summary>
+                <p>{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+        <section className="final-section" id="contacto">
+          <div className="shell section final-grid">
+            <div>
+              <p className="eyebrow">La conversación empieza acá</p>
+              <h2>Contanos qué te está trabando.</h2>
+              <p>
+                Vemos si conviene conectar lo que ya tenés o construir una pieza
+                puntual.
+              </p>
+              <Contact />
+              <p className="survey-link">
+                ¿Preferís dejarlo por escrito en la encuesta?
+                <br />
+                <a href={SURVEY_URL}>Contanos tu problema ↗</a>
+              </p>
+            </div>
+            <CommercialQr />
+          </div>
+        </section>
+      </main>
+      <footer className="shell site-footer">
+        <span>PymIA — Buenos Aires, Argentina.</span>
+        <a href="#top">Volver arriba ↑</a>
+      </footer>
+      <a className="event-dock" href={WHATSAPP_URL}>
+        Hablemos por WhatsApp ↗
       </a>
     </div>
-  </section>;
+  );
 }
-
-function AudienceDoors() {
-  return <section className="audience shell" aria-labelledby="audience-title">
-    <div className="section-intro"><p className="eyebrow">Elegí tu puerta de entrada</p><h2 id="audience-title">El problema cambia.<br />La forma de abordarlo también.</h2></div>
-    <nav className="doorway-list" aria-label="Entradas por audiencia">{audienceDoors.map((door, index) => <a className={`doorway doorway-${index + 1}`} href={door.href} key={door.label}><span className="doorway-label">{door.label}</span><span className="doorway-note">{door.note}</span><span className="doorway-arrow" aria-hidden="true">↗</span></a>)}</nav>
-  </section>;
-}
-
-function ConcreteProof() {
-  return <section className="proof shell" aria-labelledby="proof-title">
-    <div><p className="eyebrow">Un caso concreto</p><h2 id="proof-title">Vendés en Mercado Libre. Controlás existencias en Excel. Facturás en tu sistema de gestión.</h2></div>
-    <div className="proof-flow" aria-label="Ejemplo de una operación conectada"><span>Mercado Libre</span><i aria-hidden="true">+</i><span>Excel</span><i aria-hidden="true">+</i><span>Sistema de gestión</span><b aria-hidden="true">→</b><strong>PymIA conecta el flujo sin reemplazarlo.</strong></div>
-  </section>;
-}
-
-function StoryBand({ id, index, eyebrow, title, copy, items, cta, href, tone = 'light' }: StoryBandProps) {
-  return <section className={`story-band shell ${tone}`} id={id}>
-    <div className="band-index" aria-hidden="true">{index}</div>
-    <div className="band-content"><p className="eyebrow">{eyebrow}</p><h2>{title}</h2><p className="band-copy">{copy}</p><a className="button button-outline" href={href}>{cta} <span aria-hidden="true">↗</span></a></div>
-    <ul className="evidence-list">{items.map(item => <li key={item}><span aria-hidden="true">—</span>{item}</li>)}</ul>
-  </section>;
-}
-
-function Responsibility({ id }: ResponsibilityProps) {
-  return <section className="responsibility shell" id={id}>
-    <div className="section-intro"><p className="eyebrow">Lo exacto y lo que ayuda a entender</p><h2>Precisión donde importa.<br />IA donde aporta.</h2></div>
-    <div className="responsibility-grid">
-      <article><p className="role-label">CÁLCULO Y REGLAS</p><h3>El programa controla lo que no puede fallar.</h3><ul><li>cálculos</li><li>reglas</li><li>controles</li><li>resultados comprobables</li><li>mismo resultado cada vez</li></ul></article>
-      <div className="boundary"><span>PymIA coordina</span><i aria-hidden="true" /></div>
-      <article><p className="role-label">IA CONVERSACIONAL</p><h3>La IA ayuda a entender lo que está pasando.</h3><ul><li>comprensión</li><li>contexto</li><li>conversación</li><li>explicaciones claras</li></ul></article>
-    </div>
-    <p className="responsibility-note">La IA ayuda a entender. El programa controla lo que tiene que ser exacto.</p>
-  </section>;
-}
-
-function IntegrationMap() {
-  const systems = ['Mercado Libre', 'Excel', 'Sistema de gestión', 'Sistema actual', 'WhatsApp', 'Otras herramientas'];
-  return <section className="integration shell" id="how"><div className="integration-copy"><p className="eyebrow">Una pieza, no una mudanza</p><h2>Primero integramos.<br />Migrar es la última opción.</h2><p>Tu operación puede seguir siendo tu operación. PymIA se conecta donde hoy se corta el flujo y construye la capacidad que falta.</p></div><div className="map" aria-label="Mapa de sistemas que conviven con PymIA"><div className="map-center">PymIA<span>pieza que falta</span></div>{systems.map((system, index) => <div className={`map-node node-${index + 1}`} key={system}><span className="map-connector" aria-hidden="true" /><strong>{system}</strong></div>)}</div></section>;
-}
-
-function WhatsAppSection() {
-  const moments = ['qué requiere atención', 'alertas relevantes', 'consultas', 'explicación de excepciones', 'información sin abrir cinco sistemas'];
-  return <section className="whatsapp shell"><div><p className="eyebrow">Cuando la operación te busca</p><h2>Tu negocio también puede hablarte por WhatsApp.</h2><p>Sin respuestas automáticas genéricas. Sólo el contexto necesario para decidir qué mirar y qué hacer.</p></div><ul className="moment-list">{moments.map((moment, i) => <li key={moment}><span>{String(i + 1).padStart(2, '0')}</span><strong>{moment}</strong><em>→</em></li>)}</ul></section>;
-}
-
-function FinalCta({ surveyUrl }: FinalCtaProps) {
-  const qr = useSurveyQr(surveyUrl);
-  return <section className="final-cta shell" id="survey"><div className="final-copy"><p className="eyebrow">La conversación empieza acá</p><h2>¿Qué problema te está frenando hoy?</h2><p>Escaneá y contanos tu caso.</p><a className="button button-primary" href={surveyUrl}>Contanos tu problema <span aria-hidden="true">↗</span></a><span className="short-url">{surveyUrl}</span></div><div className="qr-frame"><div className="qr-quiet-zone">{qr ? <img src={qr} width="320" height="320" alt={`Código para abrir la encuesta: ${surveyUrl}`} /> : <span className="qr-placeholder">ESCANEÁ PARA ABRIR LA ENCUESTA</span>}</div><span className="qr-caption">ESCANEÁ PARA ABRIR LA ENCUESTA</span></div></section>;
-}
-
-function App() {
-  return <div className="page"><a className="skip-link" href="#main-content">Saltar al contenido</a><Header surveyUrl={SURVEY_URL} /><main id="main-content">
-    <Hero surveyUrl={SURVEY_URL} /><AudienceDoors /><ConcreteProof />
-    <StoryBand id="sellers" index="01" eyebrow="Para quienes venden en Mercado Libre" title="Tu negocio no termina en Mercado Libre." copy="Cuando margen, existencias, precios o facturación dependen de demasiados pasos manuales, el problema no es tu esfuerzo: es el cuello de botella." items={sellerPainPoints} cta="Quiero resolver un problema de mi operación" href={SURVEY_URL} tone="paper" />
-    <StoryBand id="developers" index="02" eyebrow="Para desarrolladores e integradores" title="¿Tus clientes te piden cosas que no querés volver a construir?" copy="Vos mantenés tu producto. Nosotros podemos construir la pieza especializada y dejarla lista para integrarse." items={developerCapabilities} cta="Quiero hablar de una integración" href={SURVEY_URL} tone="ink" />
-    <StoryBand id="excel" index="03" eyebrow="Para equipos que trabajan con Excel" title="Tu Excel sabe mucho de tu negocio. También puede estar escondiendo problemas." copy="PymIA revisa cálculos, referencias y datos para encontrar errores difíciles de ver y explicar qué está pasando en lenguaje claro." items={excelSignals} cta="Quiero revisar cómo trabajo con Excel" href={SURVEY_URL} tone="paper" />
-    <Responsibility id="responsibility" /><IntegrationMap /><WhatsAppSection /><FinalCta surveyUrl={SURVEY_URL} />
-  </main><footer className="site-footer shell"><span>Alejandro + Fede / PymIA</span><span>Experiencia Mercado Libre 2026</span><a href="#top">Volver arriba ↑</a></footer><a className="event-dock" href={SURVEY_URL}>Abrir encuesta <span aria-hidden="true">↗</span></a></div>;
-}
-
 export default App;
