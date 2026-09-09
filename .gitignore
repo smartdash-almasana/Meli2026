@@ -6,3 +6,6 @@ dist/
 .ui-check/
 .vercel/
 landing/Gemini_Generated_Image_*.png
+
+.vercel
+.env*
