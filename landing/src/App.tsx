@@ -76,6 +76,7 @@ function App() {
         </a>
         <nav aria-label="Navegación principal">
           <a href="#modulos">Módulos</a>
+          <a href={SURVEY_URL}>Contanos tu problema ↗</a>
           <a href={WHATSAPP_URL}>Hablemos ↗</a>
         </nav>
       </header>
@@ -103,6 +104,9 @@ function App() {
             <div>
               <div className="actions">
                 <Contact />
+                <a className="button button-secondary" href={SURVEY_URL}>
+                  Contanos tu problema ↗
+                </a>
                 <a className="text-link" href="#modulos">
                   Ver módulos ↓
                 </a>
@@ -332,11 +336,14 @@ function App() {
                 Vemos si conviene conectar lo que ya tenés o construir una pieza
                 puntual.
               </p>
-              <Contact />
+              <div className="actions">
+                <Contact />
+                <a className="button button-secondary" href={SURVEY_URL}>
+                  Contanos tu problema ↗
+                </a>
+              </div>
               <p className="survey-link">
-                ¿Preferís dejarlo por escrito en la encuesta?
-                <br />
-                <a href={SURVEY_URL}>Contanos tu problema ↗</a>
+                La encuesta es el acceso secundario para dejar tu caso por escrito.
               </p>
             </div>
             <CommercialQr />

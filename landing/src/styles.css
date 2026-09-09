@@ -190,6 +190,14 @@ h3 {
 .button:hover {
   background: #173e34;
 }
+.button-secondary {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.button-secondary:hover {
+  background: #e6eee5;
+}
 .text-link {
   display: inline-block;
   padding-block: 13px;
@@ -420,6 +428,14 @@ h3 {
   background: #e3eedc;
   color: #203a2f;
   border-color: #e3eedc;
+}
+.final-section .button-secondary {
+  background: transparent;
+  color: #e3eedc;
+  border-color: #e3eedc;
+}
+.final-section .button-secondary:hover {
+  background: #345246;
 }
 .survey-link {
   font-size: 14px;
