@@ -20,7 +20,7 @@ function CommercialQr() {
   const [qr, setQr] = useState("");
   useEffect(() => {
     let active = true;
-    void QRCode.toDataURL(WHATSAPP_URL, {
+    void QRCode.toDataURL(SURVEY_URL, {
       width: 640,
       margin: 4,
       errorCorrectionLevel: "M",
@@ -39,18 +39,18 @@ function CommercialQr() {
   return (
     <a
       className="qr-link"
-      href={WHATSAPP_URL}
-      aria-label="Abrir WhatsApp para contarnos tu problema"
+      href={SURVEY_URL}
+      aria-label="Abrir la encuesta de PymIA"
     >
       {qr && (
         <img
           src={qr}
           width="240"
           height="240"
-          alt="Código QR para hablar con PymIA por WhatsApp"
+          alt="Código QR para abrir la encuesta de PymIA"
         />
       )}
-      <span>Escaneá o tocá para hablar por WhatsApp ↗</span>
+      <span>Escaneá o tocá para completar la encuesta ↗</span>
     </a>
   );
 }
