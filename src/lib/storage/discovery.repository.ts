@@ -73,6 +73,29 @@ export async function saveDiscoveryDraft(draft: DiscoveryDraft, operatorId: Even
     email: draft.email ?? existing?.email,
     meliNickname: draft.meliNickname ?? existing?.meliNickname,
     followupConsent: draft.followupConsent ?? existing?.followupConsent,
+    business_name: draft.business_name ?? existing?.business_name,
+    meli_tenure: draft.meli_tenure ?? existing?.meli_tenure,
+    meli_level: draft.meli_level ?? existing?.meli_level,
+    sku_count_range: draft.sku_count_range ?? existing?.sku_count_range,
+    orders_month_range: draft.orders_month_range ?? existing?.orders_month_range,
+    channels: draft.channels ?? existing?.channels ?? [],
+    current_tools: draft.current_tools ?? existing?.current_tools ?? [],
+    operator_count: draft.operator_count ?? existing?.operator_count,
+    main_manual_task: draft.main_manual_task ?? existing?.main_manual_task,
+    main_pain: draft.main_pain ?? existing?.main_pain,
+    margin_method: draft.margin_method ?? existing?.margin_method,
+    product_cost_source: draft.product_cost_source ?? existing?.product_cost_source,
+    cost_update_frequency: draft.cost_update_frequency ?? existing?.cost_update_frequency,
+    target_margin: draft.target_margin ?? existing?.target_margin,
+    last_price_trigger: draft.last_price_trigger ?? existing?.last_price_trigger,
+    low_margin_awareness: draft.low_margin_awareness ?? existing?.low_margin_awareness,
+    priorities: draft.priorities ?? existing?.priorities ?? [],
+    one_problem_to_remove: draft.one_problem_to_remove ?? existing?.one_problem_to_remove,
+    sample_sku_willingness: draft.sample_sku_willingness ?? existing?.sample_sku_willingness,
+    product_cost_available: draft.product_cost_available ?? existing?.product_cost_available,
+    order_sample_willingness: draft.order_sample_willingness ?? existing?.order_sample_willingness,
+    consent_contact: draft.consent_contact ?? existing?.consent_contact,
+    consent_analysis: draft.consent_analysis ?? existing?.consent_analysis,
   }
   await db.discoveryInterviews.put(interview)
   const response: SurveyResponse = { id: `${interview.id}:${interview.currentStep}`, interviewId: interview.id, questionKey: `step_${interview.currentStep}`, value: interview, updatedAt: now }
@@ -106,7 +129,9 @@ export async function completeDiscoveryInterview(input: CompleteDiscoveryInput):
   const contactId = createLocalId()
   const contact: EventContact = { ...input.contact, id: contactId, createdAt: now, updatedAt: now, syncStatus: 'local' }
   const interview: DiscoveryInterview = { ...input.interview, contactId, status: 'completed', completedAt: now, updatedAt: now }
-  const pains = interview.painTags.map((tag, index) => ({ id: createLocalId(), contactId, painCode: tag, isPrimary: interview.primaryPain.length > 0 && index === 0, quote: interview.primaryPain || undefined, createdAt: now })) as PainObservation[]
+  const priorities = interview.priorities?.length ? interview.priorities : interview.painTags
+  const primaryPain = interview.main_pain?.trim() || interview.primaryPain
+  const pains = priorities.map((tag, index) => ({ id: createLocalId(), contactId, painCode: tag, isPrimary: primaryPain.length > 0 && index === 0, quote: primaryPain || undefined, createdAt: now })) as PainObservation[]
   const timeline: EventTimeline[] = [
     { id: createLocalId(), contactId, entityType: 'event_contacts', entityId: contactId, operatorId: contact.capturedBy, eventType: 'contact_created', occurredAt: now },
     { id: createLocalId(), contactId, entityType: 'discovery_interviews', entityId: interview.id, operatorId: contact.capturedBy, eventType: 'interview_completed', occurredAt: now, metadata: { actorType: interview.actorType, nextStep: interview.nextStep, qualification: qualifyInterview(interview) } },

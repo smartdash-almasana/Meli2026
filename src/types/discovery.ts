@@ -3,6 +3,7 @@ import type { ActorType, CapturedBy } from './contact'
 export type SurveyStatus = 'in_progress' | 'completed'
 export type YesNoUnknown = 'yes' | 'no' | 'unknown'
 
+/** Durable payload for the transactional survey and VTV Seller Intake. */
 export interface DiscoveryInterview {
   id: string
   contactId?: string
@@ -14,6 +15,35 @@ export interface DiscoveryInterview {
   completedAt?: string
   currentStep: number
   status: SurveyStatus
+
+  // VTV Seller Intake v0.1 fields (kept in the existing JSON payload).
+  business_name?: string
+  whatsapp?: string
+  email?: string
+  meli_tenure?: string
+  meli_level?: string
+  sku_count_range?: string
+  orders_month_range?: string
+  channels?: string[]
+  current_tools?: string[]
+  operator_count?: string
+  main_manual_task?: string
+  main_pain?: string
+  margin_method?: string
+  product_cost_source?: string
+  cost_update_frequency?: string
+  target_margin?: string
+  last_price_trigger?: string
+  low_margin_awareness?: string
+  priorities?: string[]
+  one_problem_to_remove?: string
+  sample_sku_willingness?: string
+  product_cost_available?: string
+  order_sample_willingness?: string
+  consent_contact?: boolean
+  consent_analysis?: boolean
+
+  // Legacy fields retained for local records and qualification compatibility.
   publicationRange?: string
   salesRange?: string
   teamSize?: string
@@ -61,8 +91,6 @@ export interface DiscoveryInterview {
   operatorNotes?: string
   fullName?: string
   companyName?: string
-  whatsapp?: string
-  email?: string
   meliNickname?: string
   followupConsent?: boolean
 }
