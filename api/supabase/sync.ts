@@ -56,5 +56,3 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ error: 'sync_unavailable' }, { status: 503 })
   }
 }
-
-export default POST
