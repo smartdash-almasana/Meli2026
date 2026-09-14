@@ -1,5 +1,5 @@
 import type { SyncOutboxEntry } from '../../src/types/sync'
-import { getSupabaseRuntimeConfig } from './runtime'
+import { getSupabaseRuntimeConfig } from './runtime.js'
 import { createClient } from '@supabase/supabase-js'
 
 function mapPayload(entry: SyncOutboxEntry, userId: string): Record<string, unknown> {
