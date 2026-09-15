@@ -55,6 +55,27 @@ export const devModules = ["Atención", "CRM", "Follow-up", "Agenda", "Catálogo
 export const verticalPacks = ["Taller mecánico", "Lubricentro", "Odontología", "Consultorio", "Estudio contable", "Distribuidora", "Seller Mercado Libre", "Comercio", "Servicio técnico"] as const;
 export const adapters = ["WhatsApp", "Mercado Libre", "Mercado Pago", "Excel", "Google Calendar", "ARCA", "n8n", "Make", "CRM", "ERP"] as const;
 export const devAudiences = ["Agencias", "Freelancers", "Implementadores IA", "Developers", "Software factories pequeñas"] as const;
+export const devModuleCatalog = [
+  ["Atención", "DISPONIBLE"], ["CRM", "PILOTO"], ["Follow-up", "EN DESARROLLO"], ["Agenda", "DISPONIBLE"],
+  ["Catálogo", "PILOTO"], ["Presupuestos", "DISPONIBLE"], ["Pedidos", "EN DESARROLLO"], ["Cobranza", "PILOTO"],
+  ["Documentos", "EN DESARROLLO"], ["Orden de trabajo", "PILOTO"], ["Posventa", "PRÓXIMAMENTE"], ["Inventario", "EN DESARROLLO"],
+  ["Conciliaciones", "PILOTO"], ["Radar", "EN DESARROLLO"], ["PymIA Intelligence", "PRÓXIMAMENTE"], ["Mercado Libre", "PILOTO"], ["Facturación", "EN DESARROLLO"],
+] as const;
+export const devVerticalCatalog = [
+  ["Taller mecánico", "PILOTO"], ["Lubricentro", "CANDIDATO"], ["Odontología", "CANDIDATO"], ["Consultorio", "CANDIDATO"],
+  ["Estudio contable", "CANDIDATO"], ["Distribuidora", "CANDIDATO"], ["Seller Mercado Libre", "PILOTO"], ["Comercio", "CANDIDATO"], ["Servicio técnico", "CANDIDATO"],
+] as const;
+export const devAdapterCatalog = [
+  ["WhatsApp", "DISPONIBLE"], ["Mercado Libre", "PILOTO"], ["Mercado Pago", "EN DESARROLLO"], ["Excel", "DISPONIBLE"], ["Google Calendar", "PILOTO"],
+  ["ARCA", "CANDIDATO"], ["n8n", "CANDIDATO"], ["Make", "CANDIDATO"], ["CRM", "PILOTO"], ["ERP", "CANDIDATO"],
+] as const;
+export const devCompositions = [
+  ["Agenda + Odontología + WhatsApp", "Turnos y recordatorios"],
+  ["Presupuestos + Taller mecánico + WhatsApp", "Recepción y seguimiento de trabajos"],
+  ["Conciliaciones + Seller MELI + Mercado Libre", "Control económico operativo"],
+  ["CRM + Distribuidora + WhatsApp", "Seguimiento comercial"],
+] as const;
+export const devPrinciples = ["Procesos de negocio", "Vocabulario vertical", "Reglas", "Estructuras de datos", "Integraciones", "Evidencia", "Componentes reutilizables"] as const;
 
 export const questions = [
   ["¿Tengo que cambiar mi sistema?", "No necesariamente. Primero buscamos integrar o extender lo que ya usás."],
