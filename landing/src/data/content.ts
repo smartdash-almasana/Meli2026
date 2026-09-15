@@ -13,16 +13,22 @@ export const howSteps = [
   ["La persona decide", "El control humano queda donde corresponde."],
 ] as const;
 
-export const commerceCards = [
-  { eyebrow: "Mercado Libre", title: "Una operación que podés leer.", copy: "Operación, datos, publicaciones, precios, stock, Full / Flex, reclamos, devoluciones, conciliaciones y automatizaciones. Mercado Experience es nuestro contexto de entrada, no el límite de PymIA.", items: ["Operación", "Rentabilidad", "Stock", "Cargos", "Publicaciones", "Reclamos"], status: "PILOTO" },
-  { eyebrow: "Rentabilidad", title: "Entendé qué queda realmente.", copy: "Cruzamos costos, comisiones, envíos e impuestos para encontrar dónde se escapa el margen.", items: ["Costos", "Comisiones", "Margen", "Conciliación"], status: "DISPONIBLE" },
-  { eyebrow: "Otros marketplaces", title: "Más canales, una operación.", copy: "Conectamos lo que ya tenés con otros canales mediante integraciones a medida, pilotos y próximos adaptadores.", items: ["Tiendanube", "Shopify", "Marketplaces futuros"], status: "EN DESARROLLO" },
-  { eyebrow: "Stock y publicaciones", title: "Detectá diferencias antes.", copy: "Conectamos fuentes de stock y publicaciones para reducir cancelaciones y tareas manuales.", items: ["Stock", "Publicaciones", "Alertas", "Full / Flex"], status: "PILOTO" },
-  { eyebrow: "Reclamos y devoluciones", title: "Una señal que no se pierde.", copy: "Ordenamos reclamos, devoluciones y excepciones para que puedas priorizar qué revisar.", items: ["Reclamos", "Devoluciones", "Excepciones"], status: "PRÓXIMAMENTE" },
-  { eyebrow: "Sobre lo que ya tenés", title: "No necesitás empezar de cero.", copy: "ERP, Excel, stock, facturación, CRM o sistemas propios: PymIA se integra alrededor de tu operación actual.", items: ["ERP", "Excel", "Facturación", "CRM"], status: "DISPONIBLE" },
+export const sellerProblems = [
+  ["Margen real poco claro", "El precio parece bueno hasta que aparecen cargos, logística, promociones y otros costos."],
+  ["Demasiado trabajo manual", "Copiar datos entre planillas y sistemas te deja menos tiempo para decidir."],
+  ["Datos repartidos", "MELI, Excel, ERP e integradores cuentan partes distintas de la misma operación."],
+  ["No sabés qué corregir primero", "Hay señales por todos lados, pero cuesta ordenar la prioridad que mueve el resultado."],
 ] as const;
 
-export const commerceCases = ["Un precio que no contempla todos los cargos", "Stock físico que no coincide con publicaciones", "Una devolución que requiere seguimiento", "Datos repartidos entre Excel y el sistema de gestión"] as const;
+export const commerceChain = ["Publicación", "Precio", "Venta", "Envío", "Cobro", "Cargos", "Reclamo / devolución", "Margen"] as const;
+export const commerceChecks = ["Publicaciones", "Precios", "Órdenes", "Stock", "Full / Flex", "Cargos", "Cobros", "Reclamos", "Devoluciones", "Conciliaciones"] as const;
+export const commerceValueBlocks = [
+  ["Rentabilidad", "Precio + costo + cargos + logística + promociones + Ads + costos privados"],
+  ["Operación", "Publicaciones + stock + órdenes + Full / Flex + envíos + reclamos + devoluciones"],
+  ["Control económico", "Ventas + cargos + cobros + liquidaciones + conciliaciones + diferencias"],
+  ["Integraciones", "Excel, ERP, integrador, stock, facturación y software propio"],
+] as const;
+export const commerceCases = ["Un seller con 3.000 publicaciones necesita detectar dónde se le escapa el margen.", "Un seller con ERP + MELI necesita una lectura común de ventas, cargos y cobros.", "Un seller multicanal necesita saber qué señal atender primero sin duplicar carga."] as const;
 
 export const smbCards = [
   ["Excel e inteligencia", "Ventas, costos, márgenes, rentabilidad, validaciones, inconsistencias y reportes.", "DISPONIBLE"],
