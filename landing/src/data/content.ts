@@ -30,17 +30,26 @@ export const commerceValueBlocks = [
 ] as const;
 export const commerceCases = ["Un seller con 3.000 publicaciones necesita detectar dónde se le escapa el margen.", "Un seller con ERP + MELI necesita una lectura común de ventas, cargos y cobros.", "Un seller multicanal necesita saber qué señal atender primero sin duplicar carga."] as const;
 
-export const smbCards = [
-  ["Excel e inteligencia", "Ventas, costos, márgenes, rentabilidad, validaciones, inconsistencias y reportes.", "DISPONIBLE"],
-  ["Conciliaciones", "Ventas, cobros, cuentas, diferencias y evidencias para cerrar mejor.", "PILOTO"],
-  ["Administración y contabilidad", "Documentación, facturación, cierres e integración con estudios.", "EN DESARROLLO"],
-  ["Costos y márgenes", "Reglas claras para saber qué cambia y qué decisión habilita.", "PILOTO"],
-  ["Comercial y cobranza", "CRM, presupuestos, pedidos, seguimiento y cobranza.", "DISPONIBLE"],
-  ["Inventario y operaciones", "Compras, entregas, órdenes de trabajo y turnos.", "EN DESARROLLO"],
-  ["Automatizaciones y documentos", "Carga repetitiva, seguimiento, alertas, reportes y workflows.", "PILOTO"],
-  ["Integraciones", "Excel, ERP, sistema contable, WhatsApp, Mercado Pago y software propio.", "DISPONIBLE"],
+export const smbProblems = [
+  ["La misma información se carga en varios lugares.", "La doble carga se vuelve parte del trabajo diario y nadie sabe cuál dato es el bueno."],
+  ["Las herramientas no hablan entre sí.", "Excel, sistema contable, banco y WhatsApp guardan piezas que deberían poder leerse juntas."],
+  ["Los reportes llegan tarde.", "La información aparece después de horas de copiar, ordenar y revisar planillas."],
+  ["Las diferencias no tienen origen visible.", "Ventas, cobros, stock o costos no cierran y cuesta encontrar dónde empezó el desvío."],
 ] as const;
-export const smbCases = ["Un estudio contable que necesita ordenar documentación", "Una distribuidora que concilia ventas y cobros", "Un comercio que duplica carga entre Excel y su sistema", "Una empresa de servicios que pierde seguimientos"] as const;
+export const smbTools = ["Excel", "ERP", "Sistema contable", "Mercado Pago", "WhatsApp", "Banco", "CRM", "Software propio"] as const;
+export const smbAreas = [
+  ["Control económico", "Que vender y cobrar no sean dos historias distintas.", "Ventas, costos, márgenes, cobros, diferencias y conciliaciones."],
+  ["Administración", "Menos copiar y pegar. Más información lista para usar.", "Carga repetida, reportes, documentación, seguimiento, cierres y control de información."],
+  ["Operación", "Detectá problemas operativos antes de que se transformen en urgencias.", "Stock, compras, pedidos, entregas, órdenes de trabajo y agenda."],
+  ["Automatización", "Automatizá después de entender el proceso, no antes.", "Tareas repetitivas, avisos, seguimiento, documentos y flujos entre sistemas."],
+] as const;
+export const smbExcel = ["Ventas", "Costos", "Márgenes", "Rentabilidad", "Inconsistencias", "Reportes"] as const;
+export const smbCases = [
+  ["Estudio contable", "Información de clientes repartida entre Excel, mails y sistemas."],
+  ["Distribuidora", "Ventas, stock y cobranzas que no cierran entre sistemas."],
+  ["Comercio", "Mercado Pago, caja, ventas y stock que requieren conciliación manual."],
+  ["Empresa de servicios", "Presupuestos, agenda, órdenes de trabajo y seguimiento dispersos."],
+] as const;
 
 export const devModules = ["Atención", "CRM", "Follow-up", "Agenda", "Catálogo", "Presupuestos", "Pedidos", "Cobranza", "Documentos", "Orden de trabajo", "Posventa", "Inventario", "Conciliaciones", "Radar", "PymIA Intelligence", "Mercado Libre", "Facturación"] as const;
 export const verticalPacks = ["Taller mecánico", "Lubricentro", "Odontología", "Consultorio", "Estudio contable", "Distribuidora", "Seller Mercado Libre", "Comercio", "Servicio técnico"] as const;

@@ -343,3 +343,66 @@ h3 { font-size: 23px; line-height: 1.2; font-weight: 600; letter-spacing: -.02em
   .operation-detail, .vtv-feature-inner { grid-template-columns: 1fr; gap: 30px; }
   .case-list { grid-template-columns: 1fr; }
 }
+
+/* PyME page: make everyday operational friction the entry point. */
+.smb-problems { background: var(--paper); }
+.smb-problem-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.smb-problem-list article { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 26px 24px 26px 0; border-bottom: 1px solid var(--line); }
+.smb-problem-list article:nth-child(odd) { border-right: 1px solid var(--line); padding-right: 28px; }
+.smb-problem-list article:nth-child(even) { padding-left: 28px; }
+.smb-index { color: var(--accent-smb); font: 12px "IBM Plex Mono", monospace; padding-top: 5px; }
+.smb-problem-list h3 { margin: 0 0 9px; font-size: 22px; }
+.smb-problem-list p { margin: 0; font-size: 15px; line-height: 1.5; }
+.smb-tools { --section-accent: var(--accent-smb); }
+.smb-tools .section-head > p { color: var(--ink); }
+.tool-cloud { display: flex; flex-wrap: wrap; gap: 10px; max-width: 900px; }
+.tool-cloud span { padding: 11px 14px; border: 1px solid color-mix(in srgb, var(--accent-smb) 42%, var(--line)); background: #fff; color: var(--ink); font-size: 15px; }
+.smb-tools-note { margin: 30px 0 0; color: var(--accent-smb); font: 500 16px "IBM Plex Mono", monospace; }
+.smb-areas { background: var(--paper); }
+.smb-area-list { border-top: 1px solid var(--line); }
+.smb-area-list article { display: grid; grid-template-columns: 44px 1fr; gap: 16px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.smb-area-list .eyebrow { color: var(--accent-smb); margin-bottom: 8px; }
+.smb-area-list h3 { margin: 0 0 8px; font: 400 31px/1.1 "Instrument Serif", Georgia, serif; }
+.smb-area-list p:last-child { margin: 0; color: var(--ink); font-size: 16px; }
+.excel-feature { --section-accent: var(--accent-smb); background: #f1f6ed; }
+.excel-feature-inner { display: grid; grid-template-columns: 1.2fr .8fr; gap: 80px; align-items: center; }
+.excel-feature h2 { max-width: 720px; }
+.excel-feature p { max-width: 690px; }
+.excel-panel { padding: 25px; border: 1px solid color-mix(in srgb, var(--accent-smb) 40%, var(--line)); background: #fff; }
+.excel-panel .status-badge { --section-accent: var(--accent-smb); color: var(--accent-smb); }
+.excel-panel ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 20px 0 0; margin: 0; }
+.excel-panel li { padding: 7px 9px; border: 1px solid color-mix(in srgb, var(--accent-smb) 28%, #fff); font-size: 13px; }
+.excel-panel p { margin: 20px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+.smb-cases { background: var(--paper); }
+.smb-case-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.smb-case-list article { min-height: 190px; display: flex; flex-direction: column; padding: 20px; border: 1px solid var(--line); border-top: 3px solid var(--accent-smb); background: #fff; }
+.smb-case-list article > span { color: var(--accent-smb); font: 11px "IBM Plex Mono", monospace; }
+.smb-case-list h3 { margin: 26px 0 8px; font-size: 20px; }
+.smb-case-list p { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.45; }
+.smb-flow { background: #eef4e9; }
+.smb-flow-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); list-style: none; padding: 0; margin: 0; border-block: 1px solid var(--line); }
+.smb-flow-list li { min-height: 135px; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; padding: 18px; border-right: 1px solid var(--line); }
+.smb-flow-list li:last-child { border-right: 0; }
+.smb-flow-list li:not(:last-child)::after { content: "→"; align-self: end; margin-top: -20px; color: var(--accent-smb); font: 20px "IBM Plex Mono", monospace; }
+.smb-flow-list span { color: var(--accent-smb); font: 11px "IBM Plex Mono", monospace; }
+.smb-flow-list strong { font-size: 16px; }
+.smb-flow-note { margin: 24px 0 0; color: var(--ink); font-size: 18px; }
+.smb-final .final-grid { grid-template-columns: 1fr; }
+.smb-final h2 { max-width: 780px; }
+
+@media (max-width: 900px) {
+  .smb-case-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .smb-flow-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .smb-flow-list li:nth-child(3) { border-right: 0; }
+  .smb-flow-list li:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+}
+
+@media (max-width: 760px) {
+  .smb-problem-list { grid-template-columns: 1fr; }
+  .smb-problem-list article:nth-child(odd), .smb-problem-list article:nth-child(even) { border-right: 0; padding-inline: 0; }
+  .excel-feature-inner { grid-template-columns: 1fr; gap: 30px; }
+  .smb-case-list, .smb-flow-list { grid-template-columns: 1fr; }
+  .smb-flow-list li, .smb-flow-list li:nth-child(3) { min-height: 96px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .smb-flow-list li:not(:last-child)::after { align-self: end; margin-top: -18px; }
+  .smb-flow-list li:last-child { border-bottom: 0; }
+}
