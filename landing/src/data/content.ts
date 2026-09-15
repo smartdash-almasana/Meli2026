@@ -1,98 +1,53 @@
-// Keep production navigation on the canonical public host. A local override is
-// useful when running the two Vite apps side by side during verification.
+// Production navigation stays on the canonical public host. A local override
+// is useful when running the two Vite apps side by side during verification.
 export const SURVEY_URL =
   import.meta.env.DEV && import.meta.env.VITE_SURVEY_URL
     ? import.meta.env.VITE_SURVEY_URL
     : "/vtv";
+
 export const WHATSAPP_MESSAGE =
-  "Hola, estoy en la Experiencia Mercado Libre 2026 y quiero contarles un problema de mi operación.";
+  "Hola, quiero contarles qué proceso de mi empresa quiero mejorar con PymIA.";
 export const WHATSAPP_URL =
   "https://wa.me/541157577039?text=" + encodeURIComponent(WHATSAPP_MESSAGE);
-export const modules = [
-  [
-    "Mercado Libre + tus sistemas",
-    "Conectamos ventas, precios, stock y operación con las herramientas que ya usás.",
-    "Tu sistema de gestión, Excel, stock físico, facturación, otros canales y WhatsApp.",
-  ],
-  [
-    "Precios y márgenes",
-    "Podemos construir controles que crucen costos, comisiones, envíos, impuestos y tus propias reglas para que entiendas qué te queda realmente.",
-    "“Tengo costos en un lugar y precios en otro.”",
-  ],
-  [
-    "Stock y publicaciones",
-    "Podemos conectar tus fuentes de stock y detectar diferencias antes de que terminen en cancelaciones, publicaciones desactualizadas o problemas operativos.",
-    "Mercado Libre, depósito, local físico, sistema de gestión y Excel.",
-  ],
-  [
-    "Facturación y operación",
-    "Podemos conectar la información de la venta con tu circuito administrativo para reducir carga manual y datos repetidos.",
-    "“Cargo la misma información dos veces.”",
-  ],
-  [
-    "WhatsApp para tu negocio",
-    "Consultá tu operación y recibí información importante por WhatsApp usando datos reales de tus sistemas.",
-    "Ejemplos de lo que podemos construir: “¿Qué stock no coincide?” o “¿Dónde tengo un problema de margen?”",
-  ],
-  [
-    "Automatizaciones",
-    "Sacamos del medio tareas repetitivas, controles manuales y pasos que hoy dependen de una persona.",
-    "Copiar datos, comparar archivos, actualizar información, revisar excepciones y generar avisos.",
-  ],
-  [
-    "Excel bajo control",
-    "Si tu Excel dice una cosa y la plata termina diciendo otra, podemos revisar fórmulas, datos, costos y reglas para encontrar dónde está el problema.",
-    "Costos viejos, rangos incompletos, referencias equivocadas y controles que sólo entiende una persona.",
-  ],
-  [
-    "Módulos a medida",
-    "Si tu sistema hace casi todo pero le falta una pieza, la podemos construir sin rehacer el resto.",
-    "Una integración, una alerta, un control, una consulta o una herramienta interna.",
-  ],
+
+export const audienceCards = [
+  { id: "commerce", eyebrow: "E-commerce", title: "Vendo online", copy: "Más control sobre ventas, stock y rentabilidad sin tirar abajo lo que ya funciona.", href: "#commerce" },
+  { id: "smb", eyebrow: "PyMEs", title: "Tengo una PyME", copy: "Menos doble carga y más claridad para decidir sobre la operación real.", href: "#smb" },
+  { id: "devs", eyebrow: "Devs / implementadores", title: "Construyo soluciones", copy: "Módulos, verticales y adaptadores para entregar mejor sin empezar de cero.", href: "#devs" },
 ] as const;
-export const sellerPainPoints = [
-  "No sé cuánto margen real me queda.",
-  "Tengo costos en un lugar y precios en otro.",
-  "El stock no coincide.",
-  "Actualizo precios a mano.",
-  "Cargo información dos veces.",
-  "Tengo un Excel que sólo entiende una persona.",
-  "Me entero del problema cuando ya pasó.",
-  "La información está repartida.",
-];
-export const excelSignals = [
-  "Costos desactualizados",
-  "Fórmulas modificadas",
-  "Rangos incompletos",
-  "Valores escritos a mano",
-  "Referencias equivocadas",
-  "Unidades mezcladas",
-  "Reglas que nadie recuerda",
-];
-export const systems = [
-  "Mercado Libre",
-  "Excel",
-  "Sistema de gestión",
-  "Sistemas propios",
-  "Herramientas verticales",
-  "WhatsApp",
-  "Otros canales",
-];
+
+export const howSteps = [
+  ["Lo que ya usás", "Tus sistemas, planillas, canales y conversaciones."],
+  ["PymIA conecta", "Integramos las piezas que hoy viven separadas."],
+  ["Entiende contexto", "Ordenamos datos alrededor del problema concreto."],
+  ["Aplica reglas", "Controles claros donde no se puede improvisar."],
+  ["Automatiza / alerta / explica", "La información llega cuando sirve."],
+  ["La persona decide", "El control humano queda donde corresponde."],
+] as const;
+
+export const commerceCards = [
+  { eyebrow: "Mercado Libre", title: "Una operación que podés leer.", copy: "VTV, cargos, publicaciones, stock, Full / Flex, reclamos, devoluciones, conciliaciones y automatizaciones. La experiencia Mercado Libre 2026 es nuestro contexto de entrada, no el límite de PymIA.", items: ["Operación", "Rentabilidad", "Stock", "Cargos", "Publicaciones", "Reclamos"], status: "PILOTO" },
+  { eyebrow: "Otros marketplaces", title: "Más canales, una operación.", copy: "Conectamos la operación que ya tenés con otros canales de venta mediante integraciones a medida, pilotos y próximos adaptadores.", items: ["Tiendanube", "Shopify", "Marketplaces futuros"], status: "EN DESARROLLO" },
+  { eyebrow: "Sobre lo que ya tenés", title: "No necesitás empezar de cero.", copy: "ERP, Excel, stock, facturación, CRM o sistemas propios: PymIA puede integrarse alrededor de tu operación actual.", items: ["Integrar", "Extender", "Automatizar"], status: "DISPONIBLE" },
+] as const;
+
+export const smbCards = [
+  ["Excel e inteligencia", "Ventas, costos, márgenes, validaciones, inconsistencias y reportes."],
+  ["Conciliaciones", "Ventas, cobros, cuentas, diferencias y evidencias para cerrar mejor."],
+  ["Contabilidad y administración", "Documentación, facturación, cierres e integración con estudios."],
+  ["Automatizaciones", "Carga repetitiva, seguimiento, documentos, alertas y workflows."],
+  ["Comercial", "CRM, presupuestos, pedidos, seguimiento y cobranza."],
+  ["Operaciones", "Inventario, compras, entregas, órdenes de trabajo y turnos."],
+  ["Integraciones", "Excel, ERP, sistema contable, WhatsApp, Mercado Pago y software propio."],
+] as const;
+
+export const devModules = ["Atención", "CRM", "Follow-up", "Agenda", "Catálogo", "Presupuestos", "Pedidos", "Cobranza", "Documentos", "Orden de trabajo", "Posventa", "Inventario", "Conciliaciones", "Radar", "PymIA Intelligence", "Mercado Libre", "Facturación"] as const;
+export const verticalPacks = ["Taller mecánico", "Lubricentro", "Odontología", "Consultorios", "Estudios contables", "Distribuidoras", "Sellers Mercado Libre", "Comercio minorista", "Servicio técnico"] as const;
+export const adapters = ["WhatsApp", "Mercado Libre", "Mercado Pago", "Excel", "Google Calendar", "ARCA", "n8n", "Make", "CRM", "ERP"] as const;
+
 export const questions = [
-  [
-    "¿Tengo que cambiar mi sistema?",
-    "No necesariamente. Primero buscamos integrar o extender lo que ya usás.",
-  ],
-  [
-    "¿Pueden trabajar con mi Excel actual?",
-    "Sí. Excel puede seguir siendo parte de tu operación mientras resolvemos el problema concreto.",
-  ],
-  [
-    "¿Trabajan sólo con Mercado Libre?",
-    "No. Mercado Libre es una de las puertas de entrada. También trabajamos sobre sistemas de gestión, Excel, WhatsApp y procesos propios.",
-  ],
-  [
-    "¿Qué hago si mi problema no aparece en los módulos?",
-    "Escribinos por WhatsApp. Primero entendemos el problema y después vemos si tiene sentido construir algo.",
-  ],
+  ["¿Tengo que cambiar mi sistema?", "No necesariamente. Primero buscamos integrar o extender lo que ya usás."],
+  ["¿Pueden trabajar con mi Excel actual?", "Sí. Excel puede seguir siendo parte de tu operación mientras resolvemos el problema concreto."],
+  ["¿Qué está disponible hoy?", "Definimos el alcance con evidencia. Algunas piezas están disponibles, otras son piloto o están en desarrollo."],
+  ["¿Cómo empezamos?", "Contanos qué querés resolver. Primero entendemos el problema y después vemos qué pieza tiene sentido."],
 ] as const;
