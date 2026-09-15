@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { completeDiscoveryInterview, listDiscoveryInterviews, saveDiscoveryDraft } from '../../lib/storage/discovery.repository'
 import type { CapturedBy } from '../../types/contact'
 import type { DiscoveryDraft } from '../../types/discovery'
@@ -6,28 +6,150 @@ import { SURVEY_SCREENS, isCompleteInterview } from './survey-contract'
 
 interface DiscoverySurveyProps { onExit: () => void; operator: CapturedBy; resume?: boolean }
 type Option = { value: string; label: string }
+type MultiField = 'channels' | 'current_tools' | 'manual_tasks' | 'problems' | 'priorities'
 
-type SpeechRecognitionLike = { lang: string; continuous: boolean; interimResults: boolean; onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null; onerror: (() => void) | null; onend: (() => void) | null; start: () => void; stop: () => void }
-type SpeechRecognitionFactory = new () => SpeechRecognitionLike
-function getSpeechRecognition(): SpeechRecognitionFactory | undefined { const browserWindow = window as unknown as { SpeechRecognition?: SpeechRecognitionFactory; webkitSpeechRecognition?: SpeechRecognitionFactory }; return browserWindow.SpeechRecognition ?? browserWindow.webkitSpeechRecognition }
+const channelModeOptions: Option[] = [
+  { value: 'meli_only', label: 'Sólo por Mercado Libre' },
+  { value: 'multi_channel', label: 'Mercado Libre y otros canales' },
+]
+const channelOptions: Option[] = [
+  { value: 'tiendanube', label: 'Tiendanube' },
+  { value: 'woocommerce', label: 'WooCommerce' },
+  { value: 'shopify', label: 'Shopify' },
+  { value: 'social', label: 'Instagram / redes sociales' },
+  { value: 'physical_store', label: 'Tienda física' },
+  { value: 'own_web', label: 'Web propia' },
+  { value: 'other_marketplaces', label: 'Otros marketplaces' },
+  { value: 'other', label: 'Otro' },
+]
+const tenureOptions: Option[] = [
+  { value: 'less_6_months', label: 'menos de 6 meses' },
+  { value: '6_12_months', label: '6–12 meses' },
+  { value: '1_3_years', label: '1–3 años' },
+  { value: 'more_3_years', label: 'más de 3 años' },
+]
+const scaleOptions: Option[] = [
+  { value: '1_10', label: '1–10' },
+  { value: '11_50', label: '11–50' },
+  { value: '51_200', label: '51–200' },
+  { value: '201_1000', label: '201–1.000' },
+  { value: 'more_1000', label: 'más de 1.000' },
+  { value: 'unknown', label: 'No sé' },
+]
+const ordersOptions: Option[] = [
+  { value: '0_10', label: '0–10' },
+  { value: '11_50', label: '11–50' },
+  { value: '51_200', label: '51–200' },
+  { value: '201_500', label: '201–500' },
+  { value: 'more_500', label: 'más de 500' },
+  { value: 'unknown', label: 'No sé' },
+]
+const operationModeOptions: Option[] = [
+  { value: 'manual', label: 'La mayor parte la hago manualmente' },
+  { value: 'systems', label: 'Uso herramientas o sistemas' },
+]
+const toolOptions: Option[] = [
+  { value: 'spreadsheets', label: 'Excel / Google Sheets' },
+  { value: 'stock', label: 'Sistema de stock' },
+  { value: 'invoicing', label: 'Facturación' },
+  { value: 'management', label: 'Sistema de gestión' },
+  { value: 'multichannel', label: 'Herramienta multicanal' },
+  { value: 'pricing', label: 'Software de precios' },
+  { value: 'listings', label: 'Software de publicaciones' },
+  { value: 'crm', label: 'CRM' },
+  { value: 'other', label: 'Otro' },
+]
+const manualTaskOptions: Option[] = [
+  { value: 'prices', label: 'Actualizar precios' },
+  { value: 'stock', label: 'Controlar stock' },
+  { value: 'listings', label: 'Publicaciones' },
+  { value: 'invoicing', label: 'Facturación' },
+  { value: 'collections', label: 'Conciliación de cobros' },
+  { value: 'claims', label: 'Reclamos' },
+  { value: 'returns', label: 'Devoluciones' },
+  { value: 'costs', label: 'Revisar costos' },
+  { value: 'reports', label: 'Reportes' },
+  { value: 'other', label: 'Otro' },
+]
+const concernOptions: Option[] = [
+  { value: 'time', label: 'Estoy perdiendo demasiado tiempo' },
+  { value: 'profit', label: 'No tengo claro si estoy ganando lo suficiente' },
+]
+const problemOptions: Option[] = [
+  { value: 'prices', label: 'Actualizar precios' },
+  { value: 'profit_per_product', label: 'Saber cuánto gano por producto' },
+  { value: 'cost_changes', label: 'Cambios de costos' },
+  { value: 'meli_fees', label: 'Cargos de Mercado Libre' },
+  { value: 'stock', label: 'Stock' },
+  { value: 'invoicing', label: 'Facturación' },
+  { value: 'collections', label: 'Conciliación' },
+  { value: 'listings', label: 'Publicaciones' },
+  { value: 'shipping', label: 'Envíos' },
+  { value: 'claims_returns', label: 'Reclamos/devoluciones' },
+  { value: 'manual_work', label: 'Demasiadas tareas manuales' },
+  { value: 'multichannel', label: 'Multicanal' },
+  { value: 'other', label: 'Otro' },
+]
+const marginClarityOptions: Option[] = [
+  { value: 'clear', label: 'Sí, bastante claro' },
+  { value: 'unclear', label: 'No del todo' },
+]
+const costSourceOptions: Option[] = [
+  { value: 'spreadsheet', label: 'Excel / Google Sheets' },
+  { value: 'management', label: 'Sistema de gestión' },
+  { value: 'supplier', label: 'Sistema del proveedor' },
+  { value: 'other_tool', label: 'Otra herramienta' },
+  { value: 'manual', label: 'Lo llevo manualmente' },
+  { value: 'outdated', label: 'No tengo el costo actualizado' },
+  { value: 'other', label: 'Otro' },
+]
+const frequencyOptions: Option[] = [
+  { value: 'daily', label: 'Todos los días' },
+  { value: 'weekly', label: 'Semanalmente' },
+  { value: 'monthly', label: 'Mensualmente' },
+  { value: 'supplier_change', label: 'Cuando cambia el proveedor' },
+  { value: 'problem', label: 'Cuando aparece un problema' },
+  { value: 'rarely', label: 'Casi nunca' },
+]
+const targetMarginOptions: Option[] = [
+  { value: 'general', label: 'Sí, uno general' },
+  { value: 'by_product', label: 'Sí, cambia según producto' },
+  { value: 'roughly', label: 'Más o menos' },
+  { value: 'none', label: 'No' },
+]
+const focusModeOptions: Option[] = [
+  { value: 'profitability', label: 'Rentabilidad y precios' },
+  { value: 'operation', label: 'Operación y control' },
+]
+const priorityOptions: Option[] = [
+  { value: 'profitability', label: 'Margen / rentabilidad' },
+  { value: 'prices', label: 'Precios' },
+  { value: 'meli_fees', label: 'Cargos Mercado Libre' },
+  { value: 'listings', label: 'Publicaciones' },
+  { value: 'stock', label: 'Stock' },
+  { value: 'shipping', label: 'Envíos' },
+  { value: 'claims_returns', label: 'Reclamos/devoluciones' },
+  { value: 'collections', label: 'Cobros/conciliación' },
+  { value: 'invoicing', label: 'Facturación' },
+  { value: 'multichannel', label: 'Multicanal' },
+  { value: 'automation', label: 'Automatización' },
+  { value: 'other', label: 'Otro' },
+]
+const followupOptions: Option[] = [
+  { value: 'pilot', label: 'Quiero que preparen una revisión piloto y puedo compartir datos adicionales' },
+  { value: 'orientation', label: 'Prefiero recibir primero una orientación inicial' },
+]
 
-const tenureOptions: Option[] = [{ value: 'less_3_months', label: 'menos de 3 meses' }, { value: '3_12_months', label: '3 a 12 meses' }, { value: '1_3_years', label: '1 a 3 años' }, { value: 'more_3_years', label: 'más de 3 años' }]
-const levelOptions: Option[] = [{ value: 'new', label: 'Nuevo' }, { value: 'classic', label: 'Clásico' }, { value: 'gold', label: 'Oro' }, { value: 'platinum', label: 'Platinum' }, { value: 'unknown', label: 'No sé' }]
-const scaleOptions: Option[] = [{ value: '1_10', label: '1–10' }, { value: '11_50', label: '11–50' }, { value: '51_200', label: '51–200' }, { value: '201_1000', label: '201–1.000' }, { value: 'more_1000', label: 'más de 1.000' }, { value: 'unknown', label: 'No sé' }]
-const ordersOptions: Option[] = [{ value: '0_10', label: '0–10' }, { value: '11_50', label: '11–50' }, { value: '51_200', label: '51–200' }, { value: '201_500', label: '201–500' }, { value: 'more_500', label: 'más de 500' }, { value: 'unknown', label: 'No sé' }]
-const channelOptions: Option[] = [{ value: 'meli_only', label: 'Sólo Mercado Libre' }, { value: 'own_store', label: 'Tienda propia' }, { value: 'social', label: 'Redes sociales' }, { value: 'other_marketplaces', label: 'Otros marketplaces' }, { value: 'wholesale', label: 'Venta mayorista' }, { value: 'other', label: 'Otro' }]
-const toolOptions: Option[] = [{ value: 'meli_native', label: 'Herramientas de Mercado Libre' }, { value: 'spreadsheets', label: 'Excel u hojas de cálculo' }, { value: 'erp', label: 'ERP o sistema de gestión' }, { value: 'integrator', label: 'Integrador o agencia' }, { value: 'own_system', label: 'Sistema propio' }, { value: 'none', label: 'Ninguna' }]
-const operatorOptions: Option[] = [{ value: 'one', label: '1 persona' }, { value: '2_3', label: '2–3 personas' }, { value: '4_10', label: '4–10 personas' }, { value: 'more_10', label: 'Más de 10' }]
-const marginOptions: Option[] = [{ value: 'none', label: 'No calculo margen todavía' }, { value: 'simple', label: 'Precio menos costo de producto' }, { value: 'full', label: 'Incluyo comisiones y otros costos' }, { value: 'system', label: 'Lo calcula mi sistema' }]
-const costSourceOptions: Option[] = [{ value: 'supplier', label: 'Listas o facturas de proveedores' }, { value: 'spreadsheet', label: 'Planilla propia' }, { value: 'system', label: 'Sistema de gestión' }, { value: 'memory', label: 'Estimación o memoria' }, { value: 'none', label: 'No tengo el costo' }]
-const frequencyOptions: Option[] = [{ value: 'weekly', label: 'Semanalmente' }, { value: 'monthly', label: 'Mensualmente' }, { value: 'quarterly', label: 'Cada varios meses' }, { value: 'rarely', label: 'Casi nunca' }, { value: 'unknown', label: 'No sé' }]
-const priceTriggerOptions: Option[] = [{ value: 'supplier_change', label: 'Cambió el costo del proveedor' }, { value: 'meli_fee', label: 'Cambió una comisión de Mercado Libre' }, { value: 'competition', label: 'Cambió la competencia' }, { value: 'stock', label: 'Necesitaba vender stock' }, { value: 'intuition', label: 'Decisión intuitiva' }, { value: 'none', label: 'No cambié precios recientemente' }]
-const awarenessOptions: Option[] = [{ value: 'yes', label: 'Sí, lo sé con datos' }, { value: 'partial', label: 'Más o menos' }, { value: 'no', label: 'No lo sé' }]
-const priorityOptions: Option[] = [{ value: 'margin_prices', label: 'Margen y precios' }, { value: 'meli_fees', label: 'Costos de Mercado Libre' }, { value: 'listings', label: 'Publicaciones' }, { value: 'operation_shipping', label: 'Operación y envíos' }, { value: 'claims_returns', label: 'Reclamos y devoluciones' }, { value: 'collections', label: 'Cobros y conciliación' }, { value: 'stock', label: 'Stock' }, { value: 'invoicing', label: 'Facturación' }, { value: 'multichannel', label: 'Varios canales' }, { value: 'other', label: 'Otro' }]
-const willingnessOptions: Option[] = [{ value: 'yes', label: 'Sí' }, { value: 'maybe', label: 'Tal vez' }, { value: 'no', label: 'No' }]
-const availabilityOptions: Option[] = [{ value: 'yes', label: 'Sí' }, { value: 'partial', label: 'Parcialmente' }, { value: 'no', label: 'No' }]
-
-const emptyDraft: DiscoveryDraft = { operatorId: 'alejandro', eventId: 'mle-2026', currentStep: 0, status: 'in_progress', actorType: 'seller', stack: [], painTags: [], developerFormats: [], salesChannels: [], whatsappInterest: [], customSolutionFormats: [], developerCapabilityFormats: [], channels: [], current_tools: [], priorities: [], business_name: '', meli_tenure: '', sku_count_range: '', orders_month_range: '', operator_count: '', main_manual_task: '', main_pain: '', margin_method: '', product_cost_source: '', cost_update_frequency: '', last_price_trigger: '', low_margin_awareness: '', one_problem_to_remove: '', sample_sku_willingness: '', product_cost_available: '', order_sample_willingness: '', consent_contact: false, consent_analysis: false }
+const emptyDraft: DiscoveryDraft = {
+  operatorId: 'alejandro', eventId: 'mle-2026', currentStep: 0, status: 'in_progress', actorType: 'seller',
+  stack: [], painTags: [], developerFormats: [], salesChannels: [], whatsappInterest: [], customSolutionFormats: [],
+  developerCapabilityFormats: [], channels: [], current_tools: [], manual_tasks: [], problems: [], priorities: [],
+  business_name: '', whatsapp: '', email: '', channel_mode: '', channels_other: '', meli_tenure: '', meli_level: '',
+  sku_count_range: '', orders_month_range: '', operation_mode: '', tools_other: '', manual_tasks_other: '',
+  main_manual_task: '', main_pain: '', main_concern: '', problems_other: '', margin_method: '', margin_clarity: '',
+  product_cost_source: '', cost_source_other: '', cost_update_frequency: '', target_margin: '', low_margin_awareness: '', focus_mode: '',
+  focus_other: '', followup_mode: '', consent_contact: false, consent_analysis: false,
+}
 
 export default function DiscoverySurvey({ onExit, operator, resume = false }: DiscoverySurveyProps) {
   const [draft, setDraft] = useState<DiscoveryDraft>(() => ({ ...emptyDraft, operatorId: operator }))
@@ -44,41 +166,68 @@ export default function DiscoverySurvey({ onExit, operator, resume = false }: Di
   useEffect(() => { if (done) return; const timer = window.setTimeout(() => { if (draft.business_name || draft.whatsapp) void persist(step) }, 250); return () => window.clearTimeout(timer) }, [draft, step, done])
 
   const update = (changes: Partial<DiscoveryDraft>) => { setError(undefined); setDraft((current) => ({ ...current, ...changes })) }
-  const toggle = (field: 'channels' | 'current_tools' | 'priorities', value: string) => { const current = draft[field] ?? []; if (field === 'priorities' && !current.includes(value) && current.length >= 3) { setError('Podés elegir como máximo 3 prioridades.'); return }; const next = current.includes(value) ? current.filter((item) => item !== value) : [...current, value]; update({ [field]: next }) }
-  const persist = async (currentStep: number) => { setSaving(true); try { const saved = await saveDiscoveryDraft({ ...draft, id: draft.id ?? savedId, currentStep, actorType: 'seller', primaryPain: draft.main_pain ?? '', painTags: draft.priorities ?? [], stack: draft.current_tools ?? [], salesChannels: draft.channels ?? [], developerFormats: [] }, operator); setSavedId(saved.id); setDraft((current) => current.id ? current : { ...current, id: saved.id }); return saved } catch { setError('No se pudo guardar localmente'); return undefined } finally { setSaving(false) } }
+  const labelsFor = (options: Option[], values: string[]) => values.map((value) => options.find((option) => option.value === value)?.label ?? value)
+  const toggle = (field: MultiField, value: string, max?: number) => {
+    const current = draft[field] ?? []
+    if (max && !current.includes(value) && current.length >= max) { setError(`Podés elegir como máximo ${max}.`); return }
+    const next = current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
+    const changes: Partial<DiscoveryDraft> = { [field]: next }
+    if (field === 'manual_tasks') changes.main_manual_task = labelsFor(manualTaskOptions, next).join('; ')
+    update(changes)
+  }
+  const setChannelMode = (value: string) => update({ channel_mode: value, channels: value === 'meli_only' ? ['meli_only'] : [] })
+  const setOperationMode = (value: string) => update({ operation_mode: value, current_tools: value === 'manual' ? ['manual'] : [] })
+  const setConcern = (value: string) => update({ main_concern: value, main_pain: concernOptions.find((option) => option.value === value)?.label ?? value })
+  const setMarginClarity = (value: string) => update({ margin_clarity: value, margin_method: value, low_margin_awareness: value === 'clear' ? 'yes' : 'partial' })
+  const setFollowupMode = (value: string) => update({ followup_mode: value, nextStep: value })
+
+  const persist = async (currentStep: number) => {
+    setSaving(true)
+    try {
+      const saved = await saveDiscoveryDraft({ ...draft, id: draft.id ?? savedId, currentStep, actorType: 'seller', primaryPain: draft.main_pain ?? '', painTags: draft.priorities ?? [], stack: draft.current_tools ?? [], salesChannels: draft.channels ?? [], developerFormats: [] }, operator)
+      setSavedId(saved.id); setDraft((current) => current.id ? current : { ...current, id: saved.id }); return saved
+    } catch { setError('No se pudo guardar localmente'); return undefined } finally { setSaving(false) }
+  }
 
   const validateStep = (currentStep: number) => {
     const text = (value?: string) => Boolean(value?.trim())
-    if (currentStep === 0 && (!text(draft.business_name) || !text(draft.whatsapp) || !text(draft.meli_tenure) || !text(draft.sku_count_range) || !text(draft.orders_month_range))) return 'Completá los datos requeridos para conocer tu operación.'
-    if (currentStep === 1 && (!(draft.current_tools?.length) || !text(draft.operator_count) || !text(draft.main_manual_task) || !text(draft.main_pain))) return 'Completá herramientas, equipo y el problema principal.'
-    if (currentStep === 2 && (!text(draft.margin_method) || !text(draft.product_cost_source) || !text(draft.cost_update_frequency) || !text(draft.last_price_trigger) || !text(draft.low_margin_awareness))) return 'Completá las respuestas de margen y precios.'
-    if (currentStep === 3 && (!(draft.priorities?.length) || (draft.priorities?.length ?? 0) > 3 || !text(draft.one_problem_to_remove))) return 'Elegí hasta 3 prioridades y contá qué problema querés sacar de encima.'
-    if (currentStep === 4 && (!text(draft.sample_sku_willingness) || !text(draft.product_cost_available) || !text(draft.order_sample_willingness) || draft.consent_contact !== true || draft.consent_analysis !== true)) return 'Confirmá qué información podés compartir y ambos consentimientos.'
+    if (currentStep === 0 && (!text(draft.business_name) || !text(draft.whatsapp) || !text(draft.channel_mode) || !draft.channels?.length || !text(draft.meli_tenure) || !text(draft.sku_count_range))) return 'Completá los datos básicos de tu negocio.'
+    if (currentStep === 0 && draft.channel_mode === 'multi_channel' && draft.channels?.includes('other') && !text(draft.channels_other)) return 'Contanos cuál es ese otro canal.'
+    if (currentStep === 1 && (!text(draft.operation_mode) || !draft.manual_tasks?.length || (draft.operation_mode === 'systems' && !draft.current_tools?.length))) return 'Elegí cómo trabajás y qué tareas seguís haciendo manualmente.'
+    if (currentStep === 1 && draft.current_tools?.includes('other') && !text(draft.tools_other)) return 'Contanos cuál es esa otra herramienta.'
+    if (currentStep === 1 && draft.manual_tasks?.includes('other') && !text(draft.manual_tasks_other)) return 'Contanos qué otra tarea hacés manualmente.'
+    if (currentStep === 2 && (!text(draft.main_concern) || !draft.problems?.length || draft.problems.length > 3)) return 'Elegí qué te preocupa y hasta 3 problemas.'
+    if (currentStep === 2 && draft.problems?.includes('other') && !text(draft.problems_other)) return 'Contanos cuál es ese otro problema.'
+    if (currentStep === 3 && (!text(draft.margin_clarity) || !text(draft.product_cost_source) || !text(draft.cost_update_frequency) || !text(draft.target_margin))) return 'Completá las respuestas de margen y costos.'
+    if (currentStep === 3 && draft.product_cost_source === 'other' && !text(draft.cost_source_other)) return 'Contanos cuál es esa otra herramienta de costos.'
+    if (currentStep === 4 && (!text(draft.focus_mode) || !draft.priorities?.length || draft.priorities.length > 3)) return 'Elegí un foco y hasta 3 áreas para revisar.'
+    if (currentStep === 4 && draft.priorities?.includes('other') && !text(draft.focus_other)) return 'Contanos cuál es esa otra área.'
+    if (currentStep === 5 && (!text(draft.followup_mode) || draft.consent_contact !== true || draft.consent_analysis !== true)) return 'Elegí cómo preferís seguir y aceptá ambos consentimientos.'
     return undefined
   }
   const next = async () => { const problem = validateStep(step); if (problem) { setError(problem); return }; const saved = await persist(Math.min(5, step + 1)); if (saved) setStep((value) => Math.min(5, value + 1)) }
   const back = async () => { await persist(Math.max(0, step - 1)); setStep((value) => Math.max(0, value - 1)) }
-  const complete = async () => { const problem = validateStep(4); if (problem) { setError(problem); setStep(4); return }; const current = await persist(5); if (!current || !isCompleteInterview(current)) { setError('Completá los datos requeridos antes de finalizar.'); return }; setSaving(true); try { const result = await completeDiscoveryInterview({ interview: current, contact: { capturedBy: operator, actorType: 'seller', fullName: current.business_name, companyName: current.business_name, whatsapp: current.whatsapp, email: current.email, meliNickname: undefined, followupConsent: current.consent_contact === true, catalogVolumeBand: current.sku_count_range } }); setSavedId(result.contact.id); setDone(true) } catch { setError('No se pudo completar la encuesta localmente') } finally { setSaving(false) } }
+  const complete = async () => { const problem = validateStep(5); if (problem) { setError(problem); setStep(5); return }; const current = await persist(5); if (!current || !isCompleteInterview(current)) { setError('Completá los datos requeridos antes de finalizar.'); return }; setSaving(true); try { const result = await completeDiscoveryInterview({ interview: current, contact: { capturedBy: operator, actorType: 'seller', fullName: current.business_name, companyName: current.business_name, whatsapp: current.whatsapp, email: current.email, meliNickname: undefined, followupConsent: current.consent_contact === true, catalogVolumeBand: current.sku_count_range } }); setSavedId(result.contact.id); setDone(true) } catch { setError('No se pudo completar la encuesta localmente') } finally { setSaving(false) } }
 
-  if (done) return <main className="capture capture-success"><section className="capture-card success-card"><SurveyBrand /><p className="eyebrow">VTV PymIA piloto</p><h1>Recibimos tu información.</h1><p className="intro">Vamos a analizarla y marcar con claridad qué está verificado y qué necesita más datos.</p><code className="contact-id">{savedId}</code><button className="primary-button" type="button" onClick={onExit}>Volver al inicio</button></section></main>
+  if (done) return <main className="capture capture-success"><section className="capture-card success-card"><SurveyBrand /><p className="eyebrow">VTV PymIA: una revisión piloto de tu operación</p><h1>Recibimos tu información.</h1><p className="intro">Si tenemos datos suficientes, te contactamos para preparar la revisión. Si falta algo, te vamos a pedir sólo la información necesaria.</p><code className="contact-id">{savedId}</code><button className="primary-button" type="button" onClick={onExit}>Volver al inicio</button></section></main>
 
   const title = SURVEY_SCREENS[step].title
-  return <main className="capture discovery-survey" aria-labelledby="survey-title"><section className="capture-card"><SurveyBrand /><header className="capture-header"><button className="back-link" type="button" onClick={() => { if (step === 0) onExit(); else void back() }}>← {step === 0 ? 'Salir' : 'Atrás'}</button><p className="step-count">Paso {step + 1} de {SURVEY_SCREENS.length}</p><div className="progress" role="progressbar" aria-label="Progreso de la VTV" aria-valuemin={1} aria-valuemax={SURVEY_SCREENS.length} aria-valuenow={step + 1}><span style={{ width: `${((step + 1) / SURVEY_SCREENS.length) * 100}%` }} /></div></header><div className="capture-content"><p className="eyebrow">VTV PymIA · diagnóstico piloto</p>{step === 0 && <><h1 id="survey-title">Descubrí qué está sólido, qué está flojo y dónde podés estar perdiendo margen.</h1><p className="intro">Completá este diagnóstico de 4–6 minutos y te devolvemos una VTV PymIA piloto gratuita de tu operación en Mercado Libre.</p><p className="clarification">No es una certificación oficial de Mercado Libre ni una auditoría contable o fiscal. Analizamos únicamente la información aportada u observable y marcamos claramente lo que no puede verificarse.</p></>}{step > 0 && <h1 id="survey-title">{title}</h1>}<p className={`survey-status ${online ? 'is-online' : 'is-offline'}`} role="status"><span aria-hidden="true">{online ? '●' : '○'}</span>{saving ? 'Guardando en este dispositivo…' : savedId ? 'Guardado en este dispositivo' : online ? 'Lista para guardar automáticamente' : 'Sin conexión · guardado local activo'}</p>
-    {step === 0 && <Step><Field required label="Nombre del negocio" value={draft.business_name} onChange={(value) => update({ business_name: value })} maxLength={120} /><Field required label="WhatsApp" value={draft.whatsapp} onChange={(value) => update({ whatsapp: value })} maxLength={40} inputMode="tel" /><Field label="Correo electrónico (opcional)" type="email" value={draft.email} onChange={(value) => update({ email: value })} maxLength={160} /><ChoiceGroup required label="¿Hace cuánto vendés en Mercado Libre?" options={tenureOptions} value={draft.meli_tenure} onChange={(value) => update({ meli_tenure: value })} /><ChoiceGroup label="Nivel o reputación (opcional)" options={levelOptions} value={draft.meli_level} onChange={(value) => update({ meli_level: value })} /><ChoiceGroup required label="¿Cuántas publicaciones o SKU manejás?" options={scaleOptions} value={draft.sku_count_range} onChange={(value) => update({ sku_count_range: value })} /><ChoiceGroup required label="¿Cuántas órdenes tenés por mes?" options={ordersOptions} value={draft.orders_month_range} onChange={(value) => update({ orders_month_range: value })} /><ChoiceGroup label="¿En qué otros canales vendés?" options={channelOptions} values={draft.channels} onToggle={(value) => toggle('channels', value)} /></Step>}
-    {step === 1 && <Step><ChoiceGroup required label="¿Qué herramientas usás hoy?" options={toolOptions} values={draft.current_tools} onToggle={(value) => toggle('current_tools', value)} /><ChoiceGroup required label="¿Cuántas personas participan?" options={operatorOptions} value={draft.operator_count} onChange={(value) => update({ operator_count: value })} /><Field required multiline label="¿Qué tarea manual te lleva más tiempo?" value={draft.main_manual_task} onChange={(value) => update({ main_manual_task: value })} maxLength={240} /><Field required voice multiline label="¿Cuál es hoy tu principal dificultad?" value={draft.main_pain} onChange={(value) => update({ main_pain: value })} maxLength={240} /></Step>}
-    {step === 2 && <Step><ChoiceGroup required label="¿Cómo calculás hoy el margen?" options={marginOptions} value={draft.margin_method} onChange={(value) => update({ margin_method: value })} /><ChoiceGroup required label="¿De dónde sale el costo del producto?" options={costSourceOptions} value={draft.product_cost_source} onChange={(value) => update({ product_cost_source: value })} /><ChoiceGroup required label="¿Cada cuánto actualizás costos?" options={frequencyOptions} value={draft.cost_update_frequency} onChange={(value) => update({ cost_update_frequency: value })} /><Field label="Margen objetivo (opcional)" value={draft.target_margin} onChange={(value) => update({ target_margin: value })} maxLength={30} /><ChoiceGroup required label="¿Qué disparó tu último cambio de precio?" options={priceTriggerOptions} value={draft.last_price_trigger} onChange={(value) => update({ last_price_trigger: value })} /><ChoiceGroup required label="¿Sabés qué publicaciones tienen margen bajo o negativo?" options={awarenessOptions} value={draft.low_margin_awareness} onChange={(value) => update({ low_margin_awareness: value })} /></Step>}
-    {step === 3 && <Step><ChoiceGroup required label="Elegí hasta 3 prioridades" options={priorityOptions} values={draft.priorities} onToggle={(value) => toggle('priorities', value)} /><Field required multiline label="Si PymIA pudiera sacarte un solo problema de encima hoy, ¿cuál sería?" value={draft.one_problem_to_remove} onChange={(value) => update({ one_problem_to_remove: value })} maxLength={300} /></Step>}
-    {step === 4 && <Step><p className="step-help">Para preparar una VTV piloto útil, indicá qué muestras podrías compartir. Nunca envíes credenciales, archivos fiscales ni información sensible.</p><ChoiceGroup required label="¿Compartirías 10–20 SKU o publicaciones?" options={willingnessOptions} value={draft.sample_sku_willingness} onChange={(value) => update({ sample_sku_willingness: value })} /><ChoiceGroup required label="¿Tenés disponible el costo de producto?" options={availabilityOptions} value={draft.product_cost_available} onChange={(value) => update({ product_cost_available: value })} /><ChoiceGroup required label="¿Compartirías órdenes o ventas recientes?" options={willingnessOptions} value={draft.order_sample_willingness} onChange={(value) => update({ order_sample_willingness: value })} /><label className="check-row"><input type="checkbox" checked={draft.consent_contact ?? false} onChange={(event) => update({ consent_contact: event.target.checked })} /> Acepto que PymIA me contacte sobre esta VTV piloto. *</label><label className="check-row"><input type="checkbox" checked={draft.consent_analysis ?? false} onChange={(event) => update({ consent_analysis: event.target.checked })} /> Acepto que PymIA analice la información que comparta para preparar la VTV. *</label></Step>}
-    {step === 5 && <Step><h2>Tu VTV queda en preparación</h2><p className="intro">Gracias por compartir el contexto de tu operación. Te devolveremos un diagnóstico claro, con evidencia y hasta tres prioridades.</p><ul className="step-help"><li>Verde: datos consistentes y verificados.</li><li>Amarillo: señal que conviene revisar.</li><li>Rojo: riesgo que requiere atención.</li><li>Gris: no verificado o con datos insuficientes.</li></ul><p className="clarification">No envíes archivos, credenciales ni información fiscal sensible.</p></Step>}
-    {error && <p className="error-message" role="alert">{error}</p>}</div><footer className="capture-actions">{step < 5 ? <button className="primary-button" type="button" onClick={() => void next()} disabled={saving}>{step === 4 ? 'Quiero mi VTV gratuita' : 'Continuar'}</button> : <button className="primary-button" type="button" onClick={() => void complete()} disabled={saving}>{saving ? 'Guardando…' : 'Enviar mi VTV'}</button>}</footer></section></main>
+  return <main className="capture discovery-survey" aria-labelledby="survey-title"><section className="capture-card"><SurveyBrand /><header className="capture-header"><button className="back-link" type="button" onClick={() => { if (step === 0) onExit(); else void back() }}>← {step === 0 ? 'Salir' : 'Atrás'}</button><p className="step-count">Paso {step + 1} de {SURVEY_SCREENS.length}</p><div className="progress" role="progressbar" aria-label="Progreso de la revisión" aria-valuemin={1} aria-valuemax={SURVEY_SCREENS.length} aria-valuenow={step + 1}><span style={{ width: `${((step + 1) / SURVEY_SCREENS.length) * 100}%` }} /></div></header><div className="capture-content"><p className="eyebrow">VTV PymIA: una revisión piloto de tu operación</p>{step === 0 && <><h1 id="survey-title">Veamos dónde se te está yendo tiempo, margen o control.</h1><p className="intro">Son 4–6 minutos. Con tus respuestas armamos una revisión piloto de tu operación en Mercado Libre y te mostramos hasta 3 puntos concretos para revisar.</p><p className="clarification">No es una certificación oficial de Mercado Libre ni una auditoría contable o fiscal.</p></>}{step > 0 && <h1 id="survey-title">{title}</h1>}<p className={`survey-status ${online ? 'is-online' : 'is-offline'}`} role="status"><span aria-hidden="true">{online ? '●' : '○'}</span>{saving ? 'Guardando en este dispositivo…' : savedId ? 'Guardado en este dispositivo' : online ? 'Lista para guardar automáticamente' : 'Sin conexión · guardado local activo'}</p>
+    {step === 0 && <Step><Field required label="Nombre del negocio" value={draft.business_name} onChange={(value) => update({ business_name: value })} maxLength={120} /><Field required label="WhatsApp" value={draft.whatsapp} onChange={(value) => update({ whatsapp: value })} maxLength={40} inputMode="tel" /><Field label="Correo electrónico (opcional)" type="email" value={draft.email} onChange={(value) => update({ email: value })} maxLength={160} /><ChoiceGroup required label="¿Dónde vendés hoy?" options={channelModeOptions} value={draft.channel_mode} onChange={setChannelMode} />{draft.channel_mode === 'multi_channel' && <><ChoiceGroup required label="¿En qué otros canales vendés?" options={channelOptions} values={draft.channels} onToggle={(value) => toggle('channels', value)} /><OtherField show={draft.channels?.includes('other') === true} label="¿Cuál?" value={draft.channels_other} onChange={(value) => update({ channels_other: value })} /></>}<ChoiceGroup required label="¿Hace cuánto vendés en Mercado Libre?" options={tenureOptions} value={draft.meli_tenure} onChange={(value) => update({ meli_tenure: value })} /><ChoiceGroup required label="¿Cuántos productos/publicaciones manejás?" options={scaleOptions} value={draft.sku_count_range} onChange={(value) => update({ sku_count_range: value })} /><ChoiceGroup required label="¿Cuántas ventas/pedidos tenés por mes?" options={ordersOptions} value={draft.orders_month_range} onChange={(value) => update({ orders_month_range: value })} /></Step>}
+    {step === 1 && <Step><ChoiceGroup required label="¿Cómo manejás hoy tu operación?" options={operationModeOptions} value={draft.operation_mode} onChange={setOperationMode} />{draft.operation_mode === 'systems' && <><ChoiceGroup required label="¿Qué herramientas o sistemas usás?" options={toolOptions} values={draft.current_tools} onToggle={(value) => toggle('current_tools', value)} /><OtherField show={draft.current_tools?.includes('other') === true} label="¿Cuál?" value={draft.tools_other} onChange={(value) => update({ tools_other: value })} /></>}<ChoiceGroup required label="¿Qué cosas seguís haciendo manualmente?" options={manualTaskOptions} values={draft.manual_tasks} onToggle={(value) => toggle('manual_tasks', value)} /><OtherField show={draft.manual_tasks?.includes('other') === true} label="¿Cuál?" value={draft.manual_tasks_other} onChange={(value) => update({ manual_tasks_other: value })} /></Step>}
+    {step === 2 && <Step><ChoiceGroup required label="Hoy, ¿qué te preocupa más?" options={concernOptions} value={draft.main_concern} onChange={setConcern} /><ChoiceGroup required label="Elegí hasta 3 problemas" options={problemOptions} values={draft.problems} onToggle={(value) => toggle('problems', value, 3)} /><OtherField show={draft.problems?.includes('other') === true} label="¿Cuál?" value={draft.problems_other} onChange={(value) => update({ problems_other: value })} /></Step>}
+    {step === 3 && <Step><p className="step-help">Queremos entender si hoy podés saber cuánto te queda después de vender.</p><ChoiceGroup required label="¿Sabés aproximadamente cuánto ganás por cada producto?" options={marginClarityOptions} value={draft.margin_clarity} onChange={setMarginClarity} /><ChoiceGroup required label="¿Dónde tenés el costo de tus productos?" options={costSourceOptions} value={draft.product_cost_source} onChange={(value) => update({ product_cost_source: value })} /><OtherField show={draft.product_cost_source === 'other'} label="¿Cuál?" value={draft.cost_source_other} onChange={(value) => update({ cost_source_other: value })} /><ChoiceGroup required label="¿Cada cuánto cambia o actualizás ese costo?" options={frequencyOptions} value={draft.cost_update_frequency} onChange={(value) => update({ cost_update_frequency: value })} /><ChoiceGroup required label="¿Usás un margen objetivo?" options={targetMarginOptions} value={draft.target_margin} onChange={(value) => update({ target_margin: value })} /></Step>}
+    {step === 4 && <Step><ChoiceGroup required label="¿Dónde querés que pongamos el foco?" options={focusModeOptions} value={draft.focus_mode} onChange={(value) => update({ focus_mode: value })} /><ChoiceGroup required label="Elegí hasta 3 áreas" options={priorityOptions} values={draft.priorities} onToggle={(value) => toggle('priorities', value, 3)} /><OtherField show={draft.priorities?.includes('other') === true} label="¿Cuál?" value={draft.focus_other} onChange={(value) => update({ focus_other: value })} /><p className="step-help">Si necesitamos completar la revisión, después podremos pedirte algunos datos adicionales.</p></Step>}
+    {step === 5 && <Step><ChoiceGroup required label="¿Cómo preferís seguir?" options={followupOptions} value={draft.followup_mode} onChange={setFollowupMode} /><p className="step-help">Podemos pedirte algunos datos adicionales para completar el análisis.</p><label className="check-row"><input type="checkbox" checked={draft.consent_contact ?? false} onChange={(event) => update({ consent_contact: event.target.checked })} /> Acepto que PymIA me contacte sobre esta revisión piloto. *</label><label className="check-row"><input type="checkbox" checked={draft.consent_analysis ?? false} onChange={(event) => update({ consent_analysis: event.target.checked })} /> Acepto que PymIA analice la información que comparta para preparar la revisión. *</label></Step>}
+    {error && <p className="error-message" role="alert">{error}</p>}</div><footer className="capture-actions"><button className="primary-button" type="button" onClick={() => void (step === 5 ? complete() : next())} disabled={saving}>{saving ? 'Guardando…' : step === 0 ? 'Empezar revisión' : step === 5 ? 'Enviar mi información' : 'Continuar'}</button></footer></section></main>
 }
 
 function SurveyBrand() { return <a className="survey-brand" href="http://127.0.0.1:5174/" aria-label="PymIA, volver a la presentación"><img src="/logopymia2.jpg" width="48" height="48" alt="" /><span><strong>PymIA</strong><small>Diagnóstico de operaciones</small></span></a> }
 function Step({ children }: { children: ReactNode }) { return <div className="step-body">{children}</div> }
-function Field({ label, value, onChange, multiline, required, type = 'text', maxLength, inputMode, voice }: { label: string; value?: string; onChange: (value: string) => void; multiline?: boolean; required?: boolean; type?: string; maxLength?: number; inputMode?: 'text' | 'tel' | 'email'; voice?: boolean }) {
-  const [listening, setListening] = useState(false); const [voiceError, setVoiceError] = useState(''); const recognitionRef = useRef<SpeechRecognitionLike | undefined>(undefined)
-  const startVoice = () => { const Recognition = getSpeechRecognition(); if (!Recognition) { setVoiceError('El dictado por voz no está disponible en este navegador.'); return }; const recognition = new Recognition(); recognition.lang = 'es-AR'; recognition.continuous = false; recognition.interimResults = false; recognition.onresult = (event) => { const transcript = Array.from({ length: event.results.length }, (_, index) => event.results[index]?.[0]?.transcript ?? '').join(' ').trim(); if (transcript) onChange([value?.trim(), transcript].filter(Boolean).join(' ')) }; recognition.onerror = () => { setListening(false); setVoiceError('No se pudo capturar el audio. Probá de nuevo.') }; recognition.onend = () => setListening(false); recognitionRef.current = recognition; setVoiceError(''); setListening(true); recognition.start() }
-  const stopVoice = () => { recognitionRef.current?.stop(); setListening(false) }; const fieldName = `field-${label.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`; const autocomplete = type === 'email' ? 'email' : inputMode === 'tel' ? 'tel' : 'off'
-  return <div className="field full-width"><label htmlFor={fieldName}>{label}{required ? ' *' : ''}</label><div className={voice ? 'field-input-row' : undefined}>{multiline ? <textarea id={fieldName} name={fieldName} autoComplete="off" rows={4} required={required} maxLength={maxLength} value={value ?? ''} onChange={(event) => onChange(event.target.value)} /> : <input id={fieldName} name={fieldName} autoComplete={autocomplete} type={type} inputMode={inputMode} required={required} maxLength={maxLength} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />}{voice && <button className={`voice-button${listening ? ' listening' : ''}`} type="button" onClick={listening ? stopVoice : startVoice} aria-pressed={listening} aria-label={listening ? 'Detener dictado por voz' : 'Dictar respuesta por voz'}>{listening ? 'Detener dictado' : 'Dictar respuesta'}</button>}</div>{voiceError && <small className="voice-error" role="status">{voiceError}</small>}</div>
+function OtherField({ show, label, value, onChange }: { show: boolean; label: string; value?: string; onChange: (value: string) => void }) { return show ? <Field required label={label} value={value} onChange={onChange} maxLength={120} /> : null }
+function Field({ label, value, onChange, multiline, required, type = 'text', maxLength, inputMode }: { label: string; value?: string; onChange: (value: string) => void; multiline?: boolean; required?: boolean; type?: string; maxLength?: number; inputMode?: 'text' | 'tel' | 'email' }) {
+  const fieldName = `field-${label.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`
+  const autocomplete = type === 'email' ? 'email' : inputMode === 'tel' ? 'tel' : 'off'
+  return <div className="field full-width"><label htmlFor={fieldName}>{label}{required ? ' *' : ''}</label>{multiline ? <textarea id={fieldName} name={fieldName} autoComplete="off" rows={4} required={required} maxLength={maxLength} value={value ?? ''} onChange={(event) => onChange(event.target.value)} /> : <input id={fieldName} name={fieldName} autoComplete={autocomplete} type={type} inputMode={inputMode} required={required} maxLength={maxLength} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />}</div>
 }
 function ChoiceGroup({ label, options, value, values, onChange, onToggle, required }: { label?: string; options: Option[]; value?: string; values?: string[]; onChange?: (value: string) => void; onToggle?: (value: string) => void; required?: boolean }) { return <fieldset className="choice-section"><legend>{label}{required ? ' *' : ''}</legend><div className="chip-grid">{options.map((option) => { const selected = values ? values.includes(option.value) : value === option.value; return <button aria-pressed={selected} className={`choice chip ${selected ? 'selected' : ''}`} type="button" key={option.value} onClick={() => values ? onToggle?.(option.value) : onChange?.(option.value)}><span translate="no">{option.label}</span></button> })}</div></fieldset> }

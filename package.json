@@ -11,6 +11,7 @@
     "verify:ml-core": "tsx scripts/verify-ml-core-oauth.ts",
     "verify:ml-items": "tsx scripts/verify-ml-items.ts",
     "verify:survey": "tsx scripts/verify-survey.ts",
+    "verify:vtv-ux": "tsx scripts/verify-vtv-ux.ts",
     "verify:survey-spec": "tsx scripts/verify-survey-spec.ts",
     "verify:survey-e2e": "tsx scripts/verify-survey-e2e.ts",
     "verify:sync": "tsx scripts/verify-sync-engine.ts",

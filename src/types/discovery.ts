@@ -25,23 +25,37 @@ export interface DiscoveryInterview {
   sku_count_range?: string
   orders_month_range?: string
   channels?: string[]
+  channels_other?: string
+  channel_mode?: string
   current_tools?: string[]
+  operation_mode?: string
+  tools_other?: string
+  manual_tasks?: string[]
+  manual_tasks_other?: string
   operator_count?: string
   main_manual_task?: string
   main_pain?: string
+  main_concern?: string
+  problems?: string[]
+  problems_other?: string
   margin_method?: string
+  margin_clarity?: string
   product_cost_source?: string
+  cost_source_other?: string
   cost_update_frequency?: string
   target_margin?: string
   last_price_trigger?: string
   low_margin_awareness?: string
   priorities?: string[]
+  focus_mode?: string
+  focus_other?: string
   one_problem_to_remove?: string
   sample_sku_willingness?: string
   product_cost_available?: string
   order_sample_willingness?: string
   consent_contact?: boolean
   consent_analysis?: boolean
+  followup_mode?: string
 
   // Legacy fields retained for local records and qualification compatibility.
   publicationRange?: string
