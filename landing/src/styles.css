@@ -225,3 +225,55 @@ h3 { font-size: 23px; line-height: 1.2; font-weight: 600; letter-spacing: -.02em
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
+
+/* Product pages keep the home system, adding a stronger but quiet line accent. */
+.page-ecommerce { --page-accent: var(--accent-commerce); }
+.page-pymes { --page-accent: var(--accent-smb); }
+.page-devs { --page-accent: var(--accent-dev); }
+.product-hero { border-top: 0; background: var(--paper); }
+.product-hero-inner { min-height: 560px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(180px, .5fr); align-items: end; gap: 70px; padding-block: 92px 86px; }
+.product-hero .eyebrow, .product-body .eyebrow, .section-band .eyebrow { color: var(--page-accent); }
+.product-hero h1 { max-width: 900px; margin-bottom: 30px; }
+.product-hero .hero-lede { max-width: 720px; color: var(--ink); }
+.product-hero .button { --accent: var(--page-accent); border-color: var(--page-accent); }
+.product-hero .button-secondary { color: var(--page-accent); }
+.product-signal { align-self: center; justify-self: end; display: grid; gap: 5px; border-left: 1px solid var(--page-accent); padding: 22px 0 22px 25px; color: var(--page-accent); }
+.product-signal span, .product-signal small { font: 11px "IBM Plex Mono", monospace; letter-spacing: .13em; text-transform: uppercase; }
+.product-signal strong { font: 100px/.8 "Instrument Serif", Georgia, serif; font-weight: 400; }
+.product-signal small { color: var(--muted); letter-spacing: .06em; }
+.product-body { border-top-color: var(--line); }
+.product-body .section-head { margin-bottom: 40px; }
+.product-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.product-card-grid .info-card { min-height: 330px; }
+.section-commerce { --section-accent: var(--accent-commerce); background: #f1f7f7; }
+.section-smb { --section-accent: var(--accent-smb); background: #f4f7f0; }
+.section-devs { --section-accent: var(--accent-dev); background: #f7f5fb; }
+.section-band { border-top: 1px solid var(--line); background: color-mix(in srgb, var(--page-accent) 8%, var(--paper)); }
+.band-inner { display: flex; align-items: center; justify-content: space-between; gap: 50px; padding-block: 80px; }
+.band-inner h2 { max-width: 700px; }
+.band-inner p { max-width: 650px; }
+.band-inner .button { flex: 0 0 auto; background: var(--page-accent); border-color: var(--page-accent); }
+.band-inner .button-secondary { background: transparent; color: var(--page-accent); }
+.case-strip { margin-top: 42px; padding: 24px; border: 1px solid color-mix(in srgb, var(--page-accent) 35%, var(--line)); background: #fff; }
+.case-strip .eyebrow { margin-bottom: 14px; }
+.case-strip ul { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 25px; list-style: none; padding: 0; margin: 0; }
+.case-strip li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.case-strip li::before { content: "↳"; color: var(--page-accent); margin-right: 9px; }
+.dev-audience-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.dev-audience-row span { padding: 9px 12px; border: 1px solid color-mix(in srgb, var(--accent-dev) 35%, var(--line)); color: var(--muted); font-size: 13px; }
+.page-ecommerce .status-badge, .page-ecommerce .tag-list li { --section-accent: var(--accent-commerce); }
+.page-pymes .status-badge { --section-accent: var(--accent-smb); }
+
+@media (max-width: 900px) {
+  .product-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .product-hero-inner { min-height: 0; grid-template-columns: 1fr; gap: 42px; padding-block: 66px 68px; }
+  .product-signal { justify-self: start; align-self: start; padding-block: 14px; }
+  .product-signal strong { font-size: 74px; }
+  .product-card-grid { grid-template-columns: 1fr; }
+  .band-inner { display: block; padding-block: 62px; }
+  .band-inner .button { margin-top: 18px; }
+  .case-strip ul { grid-template-columns: 1fr; }
+}
