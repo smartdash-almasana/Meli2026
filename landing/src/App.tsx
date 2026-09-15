@@ -40,7 +40,7 @@ function CommercialQr() {
     <a
       className="qr-link"
       href={SURVEY_URL}
-      aria-label="Abrir la encuesta de PymIA"
+      aria-label="Abrir la VTV gratuita de PymIA"
     >
       {qr && (
         <img
@@ -50,7 +50,7 @@ function CommercialQr() {
           alt="Código QR para abrir la encuesta de PymIA"
         />
       )}
-      <span>Escaneá o tocá para completar la encuesta ↗</span>
+      <span>Escaneá o tocá para completar la VTV gratuita ↗</span>
     </a>
   );
 }
@@ -76,7 +76,7 @@ function App() {
         </a>
         <nav aria-label="Navegación principal">
           <a href="#modulos">Módulos</a>
-          <a href={SURVEY_URL}>Contanos tu problema ↗</a>
+          <a href={SURVEY_URL}>VTV gratuita ↗</a>
           <a href={WHATSAPP_URL}>Hablemos ↗</a>
         </nav>
       </header>
@@ -105,7 +105,7 @@ function App() {
               <div className="actions">
                 <Contact />
                 <a className="button button-secondary" href={SURVEY_URL}>
-                  Contanos tu problema ↗
+                  Quiero mi VTV gratuita ↗
                 </a>
                 <a className="text-link" href="#modulos">
                   Ver módulos ↓
@@ -339,7 +339,7 @@ function App() {
               <div className="actions">
                 <Contact />
                 <a className="button button-secondary" href={SURVEY_URL}>
-                  Contanos tu problema ↗
+                  Quiero mi VTV gratuita ↗
                 </a>
               </div>
               <p className="survey-link">

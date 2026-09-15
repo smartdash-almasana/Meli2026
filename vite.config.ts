@@ -2,6 +2,7 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { POST as syncPost } from './api/supabase/sync'
 import { POST as audioPost } from './api/supabase/audio'
+import { POST as publicVtvPost } from './api/vtv'
 
 async function handleApiRequest(req: import('http').IncomingMessage, res: import('http').ServerResponse, handler: (request: Request) => Promise<Response>) {
   const chunks: Buffer[] = []
@@ -30,6 +31,10 @@ function localSyncMiddleware(mode: string): Plugin {
       server.middlewares.use('/api/supabase/audio', async (req, res, next) => {
         if (req.method !== 'POST') return next()
         await handleApiRequest(req, res, audioPost)
+      })
+      server.middlewares.use('/api/vtv', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        await handleApiRequest(req, res, publicVtvPost)
       })
     },
   }

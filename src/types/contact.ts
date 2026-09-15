@@ -1,4 +1,4 @@
-export type CapturedBy = 'alejandro' | 'fede'
+export type CapturedBy = 'alejandro' | 'fede' | 'public'
 
 export type ActorType = 'seller' | 'developer' | 'software_house' | 'partner' | 'meli' | 'agency' | 'other'
 

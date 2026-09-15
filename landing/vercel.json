@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/vtv", "destination": "https://encuesta.pymia.com.ar/vtv" },
+    { "source": "/vtv/:path*", "destination": "https://encuesta.pymia.com.ar/vtv/:path*" },
+    { "source": "/assets/:path*", "destination": "https://encuesta.pymia.com.ar/assets/:path*" },
+    { "source": "/api/vtv", "destination": "https://encuesta.pymia.com.ar/api/vtv" }
+  ]
+}

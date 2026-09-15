@@ -896,6 +896,7 @@ h1,
 
 .field { gap: .65rem; font-size: .92rem; }
 .field > label { font-weight: 650; cursor: pointer; }
+.honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .field input,
 .field textarea,
 .login-form input {

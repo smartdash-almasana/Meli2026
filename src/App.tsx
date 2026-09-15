@@ -16,6 +16,7 @@ const DiscoverySurvey = lazy(() => import('./features/interview/DiscoverySurvey'
 const loadingView = <main className="shell"><section className="shell-card"><p>Cargando…</p></section></main>
 
 function App() {
+  const isPublicIntake = window.location.pathname.replace(/\/+$/, '') === '/vtv'
   const [view, setView] = useState<'home' | 'capture' | 'demo' | 'interview'>('home')
   const [interviewResume, setInterviewResume] = useState(false)
   const [operator, setOperator] = useState<CapturedBy>('alejandro')
@@ -26,6 +27,7 @@ function App() {
   const [syncing, setSyncing] = useState(false)
   const [syncMessage, setSyncMessage] = useState('')
   useEffect(() => {
+    if (isPublicIntake) { setAuthLoading(false); return }
     let mounted = true
     void supabase.auth.getSession().then(async ({ data }) => {
       if (!mounted) return
@@ -40,11 +42,11 @@ function App() {
       void getOperatorProfile(next.user.id).then(setProfile).catch(() => setProfile(null)).finally(() => setAuthLoading(false))
     })
     return () => { mounted = false; listener.subscription.unsubscribe() }
-  }, [])
+  }, [isPublicIntake])
   useEffect(() => {
-    if (view !== 'home') return
+    if (isPublicIntake || view !== 'home') return
     void Promise.all([listDiscoveryInterviews(), listSyncableOutbox()]).then(([interviews, pending]) => setCounts({ total: interviews.length, complete: interviews.filter((item) => item.status === 'completed').length, incomplete: interviews.filter((item) => item.status === 'in_progress').length, pending: pending.length }))
-  }, [view])
+  }, [isPublicIntake, view])
   const runSync = async () => {
     if (!session || syncing) return
     setSyncing(true); setSyncMessage('')
@@ -73,6 +75,7 @@ function App() {
     } finally { setSyncing(false); const [interviews, pending] = await Promise.all([listDiscoveryInterviews(), listSyncableOutbox()]); setCounts({ total: interviews.length, complete: interviews.filter((item) => item.status === 'completed').length, incomplete: interviews.filter((item) => item.status === 'in_progress').length, pending: pending.length }) }
   }
 
+  if (isPublicIntake) return <Suspense fallback={loadingView}><DiscoverySurvey operator="public" publicMode onExit={() => window.location.assign('/')} /></Suspense>
   if (authLoading) return <main className="shell"><section className="shell-card"><p>Cargando la sesión…</p></section></main>
   if (!session) return <OperatorLogin />
   if (!profile?.active) return <main className="shell"><section className="shell-card"><p className="eyebrow">Meli2026</p><h1>Acceso pendiente</h1><p className="intro">Tu cuenta no está habilitada como entrevistador del evento.</p><button className="secondary-button" type="button" onClick={() => void signOutOperator()}>Cerrar sesión</button></section></main>

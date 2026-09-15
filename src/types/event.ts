@@ -1,4 +1,4 @@
-export type OperatorId = 'alejandro' | 'fede'
+export type OperatorId = 'alejandro' | 'fede' | 'public'
 
 export interface EventTimeline {
   id: string

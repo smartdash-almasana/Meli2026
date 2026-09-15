@@ -1,5 +1,9 @@
+// Keep production navigation on the canonical public host. A local override is
+// useful when running the two Vite apps side by side during verification.
 export const SURVEY_URL =
-  import.meta.env.VITE_SURVEY_URL || "https://meli2026-encuesta.vercel.app/";
+  import.meta.env.DEV && import.meta.env.VITE_SURVEY_URL
+    ? import.meta.env.VITE_SURVEY_URL
+    : "/vtv";
 export const WHATSAPP_MESSAGE =
   "Hola, estoy en la Experiencia Mercado Libre 2026 y quiero contarles un problema de mi operación.";
 export const WHATSAPP_URL =

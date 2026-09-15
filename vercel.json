@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/vtv", "destination": "/index.html" },
+    { "source": "/vtv/", "destination": "/index.html" },
+    { "source": "/vtv/:path*", "destination": "/index.html" }
+  ]
+}
