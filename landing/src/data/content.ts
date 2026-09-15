@@ -13,12 +13,16 @@ export const howSteps = [
   ["La persona decide", "El control humano queda donde corresponde."],
 ] as const;
 
-export const sellerProblems = [
-  ["Margen real poco claro", "El precio parece bueno hasta que aparecen cargos, logística, promociones y otros costos."],
-  ["Demasiado trabajo manual", "Copiar datos entre planillas y sistemas te deja menos tiempo para decidir."],
-  ["Datos repartidos", "MELI, Excel, ERP e integradores cuentan partes distintas de la misma operación."],
-  ["No sabés qué corregir primero", "Hay señales por todos lados, pero cuesta ordenar la prioridad que mueve el resultado."],
+export const sellerGrowthSignals = ["Más ventas", "Más publicaciones", "Más stock", "Más cobros", "Más Ads", "Más reclamos", "Más decisiones", "Menos tiempo para controlar todo"] as const;
+export const sellerPainPoints = [
+  "Vendés más, pero cada vez cuesta más saber cuánto ganaste realmente.",
+  "Tenés información repartida entre Mercado Libre, ERP, Excel, Mercado Pago, Ads e integradores.",
+  "Tu equipo dedica horas a revisar, copiar, conciliar o controlar información.",
+  "Costos, promociones y publicidad cambian y el margen se vuelve difícil de seguir.",
+  "Los problemas muchas veces aparecen cuando ya impactaron en ventas, reputación o rentabilidad.",
+  "Tenés más herramientas, pero no necesariamente más control.",
 ] as const;
+export const pymiaMethod = ["Observa", "Cruza datos", "Detecta diferencias", "Prioriza", "Propone"] as const;
 
 export const commerceChain = ["Publicación", "Precio", "Venta", "Envío", "Cobro", "Cargos", "Reclamo / devolución", "Margen"] as const;
 export const commerceChecks = ["Publicaciones", "Precios", "Órdenes", "Stock", "Full / Flex", "Cargos", "Cobros", "Reclamos", "Devoluciones", "Conciliaciones"] as const;

@@ -481,3 +481,47 @@ h3 { font-size: 23px; line-height: 1.2; font-weight: 600; letter-spacing: -.02em
   .dev-why-inner { grid-template-columns: 1fr; gap: 35px; }
   .dev-principles { grid-template-columns: 1fr; }
 }
+
+/* Seller thesis: growth only matters when margin and control keep up. */
+.seller-thesis { background: var(--paper); }
+.seller-thesis h2 { max-width: 760px; }
+.seller-thesis .section-head > p { color: var(--ink); }
+.growth-rail { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border-block: 1px solid var(--line); }
+.growth-rail span { min-height: 82px; display: flex; align-items: end; padding: 15px 12px; border-right: 1px solid var(--line); color: var(--accent-commerce); font: 500 12px/1.25 "IBM Plex Mono", monospace; text-transform: uppercase; }
+.growth-rail span:last-child { border-right: 0; color: var(--ink); background: #e6f2f2; }
+.seller-pain-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+.seller-pain-list li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 22px 24px 22px 0; border-bottom: 1px solid var(--line); }
+.seller-pain-list li:nth-child(odd) { border-right: 1px solid var(--line); padding-right: 28px; }
+.seller-pain-list li:nth-child(even) { padding-left: 28px; }
+.seller-pain-list p { margin: 0; color: var(--ink); font-size: 16px; line-height: 1.45; }
+.seller-mirror { border-top: 1px solid var(--line); background: #105c63; color: #e9ffff; }
+.seller-mirror-copy { max-width: 980px; margin: 0; color: #f4ffff; font: 400 clamp(29px, 4.6vw, 63px)/1.07 "Instrument Serif", Georgia, serif; }
+.pymia-control { --section-accent: var(--accent-commerce); background: #eef7f7; }
+.pymia-control .section-head > p { color: var(--ink); }
+.complexity-formula { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 13px; margin-top: 38px; padding: 31px 24px 27px; background: #162b29; color: #c9f2f0; text-align: center; font: 500 15px "IBM Plex Mono", monospace; letter-spacing: .05em; }
+.complexity-formula b { color: #79cbc5; font-weight: 400; }
+.complexity-formula i { flex-basis: 100%; border-top: 2px solid #79cbc5; margin: 7px 12% 2px; }
+.complexity-formula strong { flex-basis: 100%; color: #fff; font: 400 clamp(43px, 7vw, 84px)/.9 "Instrument Serif", Georgia, serif; letter-spacing: .02em; }
+.pymia-method { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; margin-top: 23px; color: var(--accent-commerce); font: 500 14px "IBM Plex Mono", monospace; }
+.pymia-method > span:first-child { color: var(--ink); font-size: 16px; letter-spacing: .08em; }
+.pymia-method > span:not(:first-child) { color: var(--accent-commerce); }
+.pymia-method small { flex-basis: 100%; margin-top: 4px; color: var(--muted); font: 14px "DM Sans", sans-serif; }
+.control-preserve { margin: 27px 0 0; color: var(--ink); font: 500 17px "IBM Plex Mono", monospace; }
+
+@media (max-width: 900px) {
+  .growth-rail { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .growth-rail span:nth-child(4) { border-right: 0; }
+  .growth-rail span:nth-child(-n+4) { border-bottom: 1px solid var(--line); }
+  .growth-rail span:last-child { border-right: 0; }
+}
+
+@media (max-width: 760px) {
+  .growth-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .growth-rail span:nth-child(2n) { border-right: 0; }
+  .growth-rail span:nth-child(-n+6) { border-bottom: 1px solid var(--line); }
+  .seller-pain-list { grid-template-columns: 1fr; }
+  .seller-pain-list li:nth-child(odd), .seller-pain-list li:nth-child(even) { border-right: 0; padding-inline: 0; }
+  .complexity-formula { gap: 9px; padding-inline: 15px; font-size: 11px; }
+  .complexity-formula i { margin-inline: 5%; }
+  .pymia-method { gap: 9px; font-size: 12px; }
+}
