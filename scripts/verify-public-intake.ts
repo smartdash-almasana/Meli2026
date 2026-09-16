@@ -5,18 +5,18 @@ function ensure(condition: unknown, message: string): asserts condition {
 }
 
 const valid: PublicIntakePayload = {
-  business_name: 'TEST_ONLY Public VTV', whatsapp: '+54 9 11 5555 0101', email: 'seller@example.com',
+  business_name: 'TEST_ONLY Public VTV', business_type: 'seller', business_category: 'retail', team_size: '2_3', whatsapp: '+54 9 11 5555 0101', email: 'seller@example.com',
   channel_mode: 'multi_channel', channels: ['shopify', 'other'], channels_other: 'Feria local',
-  meli_tenure: '6_12_months', sku_count_range: '11_50', orders_month_range: '11_50', operation_mode: 'systems',
+  meli_tenure: '6_12_months', sku_count_range: '11_50', orders_month_range: '11_50', operation_mode: 'systems', owner_role: 'owner', owner_manual_tasks: 'Conciliar cobros', manual_control_hours: '2_5', critical_info_search: 'Ventas y cobros',
   current_tools: ['spreadsheets', 'other'], tools_other: 'Planilla propia', manual_tasks: ['prices', 'stock'],
-  main_concern: 'profit', problems: ['profit_per_product', 'meli_fees'], margin_clarity: 'unclear',
-  product_cost_source: 'spreadsheet', cost_update_frequency: 'monthly', target_margin: 'by_product',
+  main_concern: 'profit', problems: ['profit_per_product', 'meli_fees'], growth_difficulties: ['margin', 'stock'], margin_clarity: 'unclear',
+  product_cost_source: 'spreadsheet', cost_update_frequency: 'monthly', target_margin: 'by_product', margin_components: ['meli_fees', 'ads'], stock_owner: 'owner', stock_sync: 'partial', stockout_frequency: 'sometimes', supplier_lead_time: '1_3_weeks', supplier_count: '2_5', uses_full: 'no', ads_usage: 'yes', ads_manager: 'owner', ads_budget_method: 'performance', ads_profitability: 'unknown', post_sale_channels: ['claims'], recurring_postsale_issue: 'Seguimiento manual', open_problem: 'Controlar margen', missing_data: 'Costos externos',
   focus_mode: 'profitability', priorities: ['profitability', 'prices'], followup_mode: 'orientation',
   consent_contact: true, consent_analysis: true,
 }
 
 const normalized = validatePublicIntake({ website: '', draft: valid })
-ensure(normalized.business_name === valid.business_name && normalized.priorities.length === 2, 'valid payload normalization failed')
+ensure(normalized.business_name === valid.business_name && normalized.priorities.length === 2 && normalized.growth_difficulties?.length === 2 && normalized.post_sale_channels?.length === 1, 'valid payload normalization failed')
 ensure(buildPublicRows(normalized).tables.event_contacts[0] && buildPublicRows(normalized).tables.discovery_interviews[0], 'server row construction failed')
 const rows = buildPublicRows(normalized)
 const contact = rows.tables.event_contacts[0] as Record<string, unknown>

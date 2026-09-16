@@ -21,8 +21,26 @@ export const sellerPainPoints = [
   "Costos, promociones y publicidad cambian y el margen se vuelve difícil de seguir.",
   "Los problemas muchas veces aparecen cuando ya impactaron en ventas, reputación o rentabilidad.",
   "Tenés más herramientas, pero no necesariamente más control.",
+  "Algunas publicaciones venden mucho pero dejan poco margen.",
+  "Podés tener stock de sobra en productos que casi no rotan y quedarte sin el que empieza a crecer.",
+  "Ads puede aumentar ventas sin mejorar la rentabilidad.",
 ] as const;
 export const pymiaMethod = ["Observa", "Cruza datos", "Detecta diferencias", "Prioriza", "Propone"] as const;
+export const sellerSignalExamples = [
+  ["Ads suben + ventas suben + margen baja", "El crecimiento puede estar costando demasiado."],
+  ["Ventas suben + stock cae rápido + reposición tarda", "Señal de riesgo operativo de quiebre."],
+  ["Stock alto + ventas bajas", "Capital inmovilizado para investigar."],
+  ["Tráfico sube + ventas no acompañan", "Conviene revisar conversión, oferta o publicación."],
+  ["Costo proveedor sube + precio igual", "El margen puede deteriorarse sin que la facturación lo muestre."],
+] as const;
+export const sellerBusinessChain = ["Demanda", "Conversión", "Ventas", "Rentabilidad", "Rotación", "Stock", "Operación", "Capacidad de crecer"] as const;
+export const vtvPublicSteps = [
+  ["Entendemos el contexto", "negocio, herramientas y tareas"],
+  ["Vemos qué información está disponible", "sin prometer cobertura completa"],
+  ["Pedimos sólo lo que falta", "costos, reposición o procesos internos"],
+  ["Cruzamos señales", "dato → relación → evidencia → impacto"],
+  ["Priorizamos con vos", "margen, tiempo y control"],
+] as const;
 
 export const commerceChain = ["Publicación", "Precio", "Venta", "Envío", "Cobro", "Cargos", "Reclamo / devolución", "Margen"] as const;
 export const commerceChecks = ["Publicaciones", "Precios", "Órdenes", "Stock", "Full / Flex", "Cargos", "Cobros", "Reclamos", "Devoluciones", "Conciliaciones"] as const;

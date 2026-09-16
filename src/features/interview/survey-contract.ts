@@ -2,11 +2,13 @@ import type { ActorType } from '../../types/contact'
 import type { DiscoveryInterview } from '../../types/discovery'
 
 export const SURVEY_SCREENS = [
-  { id: 'PROFILE', title: 'Tu negocio' },
-  { id: 'OPERATION', title: 'Cómo trabajás hoy' },
-  { id: 'CONCERNS', title: 'Qué te está complicando' },
+  { id: 'PROFILE', title: 'Tu negocio y contexto' },
+  { id: 'OPERATION', title: 'Tus herramientas y tareas' },
+  { id: 'CONCERNS', title: 'Qué cambia al crecer' },
   { id: 'MARGIN', title: 'Margen y costos' },
-  { id: 'FOCUS', title: 'Qué querés que revisemos' },
+  { id: 'STOCK_ADS', title: 'Stock y publicidad' },
+  { id: 'POST_SALE', title: 'Postventa y foco' },
+  { id: 'TRUST', title: 'Cómo vamos a revisar' },
   { id: 'NEXT_STEP', title: 'Siguiente paso' },
 ]
 

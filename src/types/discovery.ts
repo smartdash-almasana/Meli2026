@@ -18,6 +18,9 @@ export interface DiscoveryInterview {
 
   // VTV Seller Intake v0.1 fields (kept in the existing JSON payload).
   business_name?: string
+  business_type?: string
+  business_category?: string
+  team_size?: string
   whatsapp?: string
   email?: string
   meli_tenure?: string
@@ -29,6 +32,10 @@ export interface DiscoveryInterview {
   channel_mode?: string
   current_tools?: string[]
   operation_mode?: string
+  owner_role?: string
+  owner_manual_tasks?: string
+  manual_control_hours?: string
+  critical_info_search?: string
   tools_other?: string
   manual_tasks?: string[]
   manual_tasks_other?: string
@@ -38,12 +45,15 @@ export interface DiscoveryInterview {
   main_concern?: string
   problems?: string[]
   problems_other?: string
+  growth_difficulties?: string[]
+  growth_difficulties_other?: string
   margin_method?: string
   margin_clarity?: string
   product_cost_source?: string
   cost_source_other?: string
   cost_update_frequency?: string
   target_margin?: string
+  margin_components?: string[]
   last_price_trigger?: string
   low_margin_awareness?: string
   priorities?: string[]
@@ -53,6 +63,20 @@ export interface DiscoveryInterview {
   sample_sku_willingness?: string
   product_cost_available?: string
   order_sample_willingness?: string
+  stock_owner?: string
+  stock_sync?: string
+  stockout_frequency?: string
+  supplier_lead_time?: string
+  supplier_count?: string
+  uses_full?: string
+  ads_usage?: string
+  ads_manager?: string
+  ads_budget_method?: string
+  ads_profitability?: string
+  post_sale_channels?: string[]
+  recurring_postsale_issue?: string
+  open_problem?: string
+  missing_data?: string
   consent_contact?: boolean
   consent_analysis?: boolean
   followup_mode?: string
