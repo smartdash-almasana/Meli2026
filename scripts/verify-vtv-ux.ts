@@ -19,7 +19,7 @@ const draft: DiscoveryDraft = {
   main_manual_task: 'Actualizar precios; Controlar stock; Otro', main_concern: 'profit', main_pain: 'No tengo claro si estoy ganando lo suficiente',
   problems: ['prices', 'profit_per_product', 'other'], problems_other: 'Cambios de proveedor', margin_clarity: 'unclear',
   margin_method: 'unclear', product_cost_source: 'other', cost_source_other: 'Planilla del proveedor', cost_update_frequency: 'supplier_change',
-  target_margin: 'by_product', priorities: ['profitability', 'prices', 'other'], focus_mode: 'profitability', focus_other: 'Automatización de reportes',
+  target_margin: 'by_product', supply_models: ['wholesale_resale', 'direct_import'], primary_supply_model: 'wholesale_resale', priorities: ['profitability', 'prices', 'other'], focus_mode: 'profitability', focus_other: 'Automatización de reportes',
   followup_mode: 'pilot', nextStep: 'pilot', consent_contact: true, consent_analysis: true,
 }
 const saved = await saveDiscoveryDraft(draft, 'alejandro')
@@ -28,6 +28,7 @@ ensure(recovered, 'modern VTV draft recovery failed')
 ensure(recovered?.channels?.length === 3 && recovered.channels_other === 'Feria local', 'channel multiselect/other persistence failed')
 ensure(recovered?.manual_tasks?.length === 3 && recovered.manual_tasks_other === 'Reportes', 'manual task multiselect/other persistence failed')
 ensure(recovered?.problems?.length === 3 && recovered.priorities?.length === 3, 'three-item selection persistence failed')
+ensure(recovered?.supply_models?.length === 2 && recovered.primary_supply_model === 'wholesale_resale', 'supply model persistence failed')
 ensure(isCompleteInterview(recovered), 'modern VTV completion contract failed')
 ensure(!isCompleteInterview({ ...recovered, problems: ['a', 'b', 'c', 'd'] }), 'problem max-three contract failed')
 ensure(!isCompleteInterview({ ...recovered, priorities: ['a', 'b', 'c', 'd'] }), 'priority max-three contract failed')

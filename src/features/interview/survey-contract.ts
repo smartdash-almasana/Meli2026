@@ -15,7 +15,7 @@ export const SURVEY_SCREENS = [
 export const REQUIRED_FIELDS = [
   'business_name', 'whatsapp', 'channel_mode', 'channels', 'meli_tenure', 'sku_count_range',
   'operation_mode', 'current_tools', 'manual_tasks', 'main_concern', 'problems', 'margin_clarity',
-  'product_cost_source', 'cost_update_frequency', 'target_margin', 'focus_mode', 'priorities',
+  'product_cost_source', 'cost_update_frequency', 'target_margin', 'supply_models', 'focus_mode', 'priorities',
   'followup_mode', 'consent_contact', 'consent_analysis',
 ] as const
 
@@ -41,7 +41,7 @@ export function isCompleteInterview(interview: DiscoveryInterview): boolean {
     (interview.manual_tasks?.length ?? 0) > 0 && text(interview.main_concern) &&
     (interview.problems?.length ?? 0) > 0 && (interview.problems?.length ?? 0) <= 3 &&
     text(interview.margin_clarity) && text(interview.product_cost_source) &&
-    text(interview.cost_update_frequency) && text(interview.target_margin) && text(interview.focus_mode) &&
+    text(interview.cost_update_frequency) && text(interview.target_margin) && (interview.supply_models?.length ?? 0) > 0 && text(interview.focus_mode) &&
     priorities.length > 0 && priorities.length <= 3 && text(interview.followup_mode) &&
     interview.consent_contact === true && interview.consent_analysis === true,
   )

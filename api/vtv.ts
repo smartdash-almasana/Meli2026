@@ -38,6 +38,7 @@ const yesNoUnknown = new Set(['yes', 'no', 'unknown'])
 const adsManagers = new Set(['owner', 'team', 'agency', 'shared'])
 const adsBudgetMethods = new Set(['fixed', 'sales', 'performance', 'intuition', 'unknown'])
 const postSaleSignals = new Set(['returns', 'claims', 'questions', 'manual', 'recurring', 'none'])
+const supplyModels = new Set(['own_manufacturing', 'direct_import', 'wholesale_resale', 'local_manufacturing', 'private_label', 'combined', 'other'])
 const forbiddenKeys = new Set(['id', 'contactId', 'contact_id', 'operator', 'operatorId', 'operator_id', 'capturedBy', 'captured_by', 'eventId', 'event_id', 'status', 'completedAt', 'completed_at', 'tenantId', 'tenant_id', 'admin'])
 
 export interface PublicIntakePayload {
@@ -83,6 +84,9 @@ export interface PublicIntakePayload {
   ads_manager?: string
   ads_budget_method?: string
   ads_profitability?: string
+  supply_models: string[]
+  primary_supply_model?: string
+  supply_model_other?: string
   post_sale_channels?: string[]
   recurring_postsale_issue?: string
   open_problem?: string
@@ -166,6 +170,12 @@ export function validatePublicIntake(input: unknown): PublicIntakePayload {
   const selectedGrowthDifficulties = optionalList(draft.growth_difficulties, 'growth_difficulties', growthDifficulties)
   if (selectedGrowthDifficulties?.includes('other') && !text(draft.growth_difficulties_other, 'growth_difficulties_other', 120)) throw new Error('missing_growth_difficulties_other')
   const selectedMarginComponents = optionalList(draft.margin_components, 'margin_components', marginComponents)
+  const selectedSupplyModels = list(draft.supply_models, 'supply_models', supplyModels)
+  if (selectedSupplyModels.length === 0) throw new Error('invalid_supply_models')
+  const suppliedPrimarySupplyModel = optionalChoice(draft.primary_supply_model, 'primary_supply_model', supplyModels)
+  if (selectedSupplyModels.length > 1 && !suppliedPrimarySupplyModel) throw new Error('missing_primary_supply_model')
+  if (suppliedPrimarySupplyModel && !selectedSupplyModels.includes(suppliedPrimarySupplyModel)) throw new Error('invalid_primary_supply_model')
+  if (selectedSupplyModels.includes('other') && !text(draft.supply_model_other, 'supply_model_other', 120)) throw new Error('missing_supply_model_other')
   const selectedPostSaleSignals = optionalList(draft.post_sale_channels, 'post_sale_channels', postSaleSignals)
 
   return {
@@ -201,6 +211,9 @@ export function validatePublicIntake(input: unknown): PublicIntakePayload {
     cost_update_frequency: choice(draft.cost_update_frequency, 'cost_update_frequency', frequencies),
     target_margin: choice(draft.target_margin, 'target_margin', targetMargins),
     margin_components: selectedMarginComponents,
+    supply_models: selectedSupplyModels,
+    primary_supply_model: suppliedPrimarySupplyModel ?? (selectedSupplyModels.length === 1 ? selectedSupplyModels[0] : undefined),
+    supply_model_other: selectedSupplyModels.includes('other') ? text(draft.supply_model_other, 'supply_model_other', 120)! : undefined,
     stock_owner: optionalChoice(draft.stock_owner, 'stock_owner', stockOwners),
     stock_sync: optionalChoice(draft.stock_sync, 'stock_sync', stockSyncModes),
     stockout_frequency: optionalChoice(draft.stockout_frequency, 'stockout_frequency', stockoutFrequencies),

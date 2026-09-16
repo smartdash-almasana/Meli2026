@@ -73,6 +73,9 @@ export interface DiscoveryInterview {
   ads_manager?: string
   ads_budget_method?: string
   ads_profitability?: string
+  supply_models?: string[]
+  primary_supply_model?: string
+  supply_model_other?: string
   post_sale_channels?: string[]
   recurring_postsale_issue?: string
   open_problem?: string
